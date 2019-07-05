@@ -5,12 +5,22 @@ defmodule Ticketsystem.MixProject do
     [
       app: :ticketsystem,
       version: "0.1.0",
-      elixir: "~> 1.5",
+      elixir: "~> 1.9",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [coveralls: :test, "coveralls.detail": :test, "coveralls.post": :test, "coveralls.html": :test],
+      deps: deps(),
+
+      # Docs
+      name: "Ticketsystem",
+      source_url: "https://github.com/robinoudev/ticketsystem",
+      docs: [
+        main: "Ticketsystem",
+        extras: ["README.md"]
+      ]
     ]
   end
 
@@ -20,7 +30,7 @@ defmodule Ticketsystem.MixProject do
   def application do
     [
       mod: {Ticketsystem.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :ex_machina]
     ]
   end
 
@@ -40,7 +50,15 @@ defmodule Ticketsystem.MixProject do
       {:postgrex, ">= 0.0.0"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
-      {:plug_cowboy, "~> 2.0"}
+      {:plug_cowboy, "~> 2.0"},
+      {:absinthe, "~> 1.4.0"},
+      {:absinthe_plug, "~> 1.4.7"},
+      {:excoveralls, "~> 0.11", only: :test},
+      {:ex_machina, "~> 2.3"},
+      {:guardian, "~> 1.2.1"},
+      {:comeonin, "~> 5.1.2"},
+      {:bcrypt_elixir, "~> 2.0.3"},
+      {:ex_doc, "~> 0.19", only: :dev, runtime: false}
     ]
   end
 
