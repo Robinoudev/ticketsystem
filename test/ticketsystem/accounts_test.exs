@@ -33,7 +33,7 @@ defmodule Ticketsystem.AccountsTest do
       assert {:ok, %User{} = user} = Accounts.create_user(@valid_attrs)
       assert user.email == "some email"
       assert user.name == "some name"
-      assert user.password == "some password"
+      assert Bcrypt.verify_pass(@valid_attrs.password, user.password) == true
       assert user.username == "some username"
     end
 
@@ -43,10 +43,12 @@ defmodule Ticketsystem.AccountsTest do
 
     test "update_user/2 with valid data updates the user" do
       user = user_fixture()
+      require IEx; IEx.pry()
       assert {:ok, %User{} = user} = Accounts.update_user(user, @update_attrs)
       assert user.email == "some updated email"
       assert user.name == "some updated name"
-      assert user.password == "some updated password"
+      assert Bcrypt.verify_pass(@update_attrs.password, user.password) == true
+      assert Bcrypt.verify_pass(@valid_attrs.password, user.password) == false
       assert user.username == "some updated username"
     end
 
