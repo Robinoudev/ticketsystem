@@ -8,4 +8,5 @@ env:
   - MIX_ENV=test
 
 script:
+  - mix format
   - mix coveralls.travis

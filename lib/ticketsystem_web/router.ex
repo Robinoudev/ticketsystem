@@ -12,10 +12,8 @@ defmodule TicketsystemWeb.Router do
   scope "/" do
     pipe_through [:api, :auth]
 
-    forward "/graphiql", Absinthe.Plug.GraphiQL,
-      schema: TicketsystemWeb.Schema
+    forward "/graphiql", Absinthe.Plug.GraphiQL, schema: TicketsystemWeb.Schema
 
-    forward "/", Absinthe.Plug,
-      schema: TicketsystemWeb.Schema
+    forward "/", Absinthe.Plug, schema: TicketsystemWeb.Schema
   end
 end

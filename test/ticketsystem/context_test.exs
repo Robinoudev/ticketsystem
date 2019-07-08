@@ -43,5 +43,15 @@ defmodule Ticketsystem.ContextTest do
 
       assert absinthe.context.current_user.id == user.id
     end
+
+    test "Wrong credentials give unauthorized error" do
+      conn =
+        build_conn()
+        |> Ticketsystem.Context.init()
+        |> Ticketsystem.Context.call({})
+
+      assert conn.private[:absinthe] == nil
+      # require IEx; IEx.pry()
+    end
   end
 end

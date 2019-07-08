@@ -6,8 +6,18 @@ defmodule Ticketsystem.AccountsTest do
   describe "users" do
     alias Ticketsystem.Accounts.User
 
-    @valid_attrs %{email: "email@email.com", name: "some name", password: "some password", username: "some username"}
-    @update_attrs %{email: "updatedemail@email.com", name: "some updated name", password: "some updated password", username: "some updated username"}
+    @valid_attrs %{
+      email: "email@email.com",
+      name: "some name",
+      password: "some password",
+      username: "some username"
+    }
+    @update_attrs %{
+      email: "updatedemail@email.com",
+      name: "some updated name",
+      password: "some updated password",
+      username: "some updated username"
+    }
     @invalid_attrs %{email: nil, name: nil, password: nil, username: nil}
 
     def user_fixture(attrs \\ %{}) do

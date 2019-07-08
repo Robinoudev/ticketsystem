@@ -15,7 +15,7 @@ config :ticketsystem, Ticketsystem.Guardian,
   allowed_algos: ["HS512"],
   # optional
   verify_module: Guardian.JWT,
-  issuer: "BlogAppGql",
+  issuer: "Ticketsystem",
   ttl: {30, :days},
   allowed_drift: 2000,
   # optional

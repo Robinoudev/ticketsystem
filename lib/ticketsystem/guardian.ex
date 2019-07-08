@@ -4,11 +4,11 @@ defmodule Ticketsystem.Guardian do
 
   def subject_for_token(user, _claims) do
     sub = to_string(user.id)
-  {:ok, sub}
- end
+    {:ok, sub}
+  end
 
   def resource_from_claims(claims) do
-    user = claims["sub"] |> Accounts.get_user!
-    {:ok,  user}
+    user = claims["sub"] |> Accounts.get_user!()
+    {:ok, user}
   end
 end
