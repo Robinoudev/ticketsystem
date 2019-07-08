@@ -5,7 +5,6 @@ defmodule Ticketsystem.AuthHelperTest do
 
   describe "auth_helper" do
     alias Ticketsystem.Accounts
-    alias Ticketsystem.Accounts.User
 
     @user_attrs %{
       email: "email@email.com",

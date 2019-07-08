@@ -25,7 +25,7 @@ defmodule Ticketsystem.ContextTest do
     test "Validates token in req_header" do
       user = user_fixture()
 
-      token =
+      req_headers =
         TicketsystemWeb.Resolvers.Accounts.login(
           %{},
           %{email: user.email, password: user.password},
@@ -35,7 +35,7 @@ defmodule Ticketsystem.ContextTest do
 
       conn =
         build_conn()
-        |> put_req_header("authorization", "Bearer #{token.token}")
+        |> put_req_header("authorization", "Bearer #{req_headers.token}")
         |> Ticketsystem.Context.call({})
 
       assert conn.request_path == "/"
