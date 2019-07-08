@@ -2,10 +2,6 @@ defmodule Ticketsystem.Context do
   @behaviour Plug
 
   import Plug.Conn
-  import Ecto.Query, only: [where: 2]
-
-  alias Ticketsystem.Repo
-  alias Ticketsystem.Accounts.User
 
   def init(opts), do: opts
 
@@ -13,6 +9,7 @@ defmodule Ticketsystem.Context do
     case build_context(conn) do
       {:ok, context} ->
         put_private(conn, :absinthe, %{context: context})
+
       _ ->
         conn
     end
@@ -20,18 +17,24 @@ defmodule Ticketsystem.Context do
 
   defp build_context(conn) do
     with ["Bearer " <> token] <- get_req_header(conn, "authorization"),
-      {:ok, current_user} <- authorize(token) do
-        {:ok, %{current_user: current_user, token: token}}
-      end
+         {:ok, current_user} <- authorize(token) do
+      {:ok, %{current_user: current_user, token: token}}
+    end
   end
 
   defp authorize(token) do
-    User
-    |> where(token: ^token)
-    |> Repo.one()
+    Ticketsystem.Guardian.decode_and_verify(token)
     |> case do
-      nil -> {:error, "Invalid authorization token provided"}
-      user -> {:ok, user}
+      nil ->
+        {:error, "Invalid authorization token provided"}
+
+      sub ->
+          sub
+          |> elem(1)
+          |> case do
+            nil -> {:error, "Invalid token"}
+            claim -> Ticketsystem.Guardian.resource_from_claims(claim)
+          end
     end
   end
 end
