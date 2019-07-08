@@ -6,6 +6,7 @@ defmodule TicketsystemWeb.Schema.AccountsTypes do
     field :name, :string
     field :username, :string
     field :email, :string
-    field :password, :string
+    field :password_hash, :string
+    field :token, :string
   end
 end
