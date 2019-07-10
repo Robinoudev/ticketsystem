@@ -1,6 +1,10 @@
 defmodule TicketsystemWeb.Resolvers.Accounts do
-  def list_users(_parent, _args, _resolution) do
+  def list_users(_parent, _args, %{context: %{current_user: _user}}) do
     {:ok, Ticketsystem.Accounts.list_users()}
+  end
+
+  def list_users(_parent, _args, _resolution) do
+    {:error, "Access denied"}
   end
 
   def create_user(_parent, args, _resolution) do

@@ -8,7 +8,11 @@ defmodule Ticketsystem.Guardian do
   end
 
   def resource_from_claims(claims) do
-    user = claims["sub"] |> Accounts.get_user!()
-    {:ok, user}
+    if claims == :invalid_token do
+      {:error, "Invalid token"}
+    else
+      user = claims["sub"] |> Accounts.get_user!()
+      {:ok, user}
+    end
   end
 end
