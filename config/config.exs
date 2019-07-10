@@ -10,6 +10,20 @@ use Mix.Config
 config :ticketsystem,
   ecto_repos: [Ticketsystem.Repo]
 
+config :ticketsystem, Ticketsystem.Guardian,
+  # optional
+  allowed_algos: ["HS512"],
+  # optional
+  verify_module: Guardian.JWT,
+  issuer: "Ticketsystem",
+  ttl: {30, :days},
+  allowed_drift: 2000,
+  # optional
+  verify_issuer: true,
+  # generated using: JOSE.JWK.generate_key({:oct, 16}) |> JOSE.JWK.to_map |> elem(1)
+  secret_key: %{"k" => "6HqIpke1qsP6AEr2NVGbUg", "kty" => "oct"},
+  serializer: Ticketsystem.Guardian
+
 # Configures the endpoint
 config :ticketsystem, TicketsystemWeb.Endpoint,
   url: [host: "localhost"],
