@@ -8,5 +8,7 @@ env:
   - MIX_ENV=test
 
 script:
+  - mix deps.get
+  - mix ecto.reset
   - mix format
   - mix coveralls.travis
