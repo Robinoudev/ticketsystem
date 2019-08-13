@@ -4,12 +4,13 @@ WORKDIR /app
 
 COPY . /app
 
-RUN apt-get update
-RUN apt-get install --yes build-essential inotify-tools postgresql-client erlang
+RUN apt-get update &&\
+ apt-get install --yes build-essential inotify-tools postgresql-client erlang
 
-RUN mix local.hex --force
-RUN mix local.rebar --force
-RUN mix archive.install --force https://github.com/phoenixframework/archives/raw/master/phx_new.ez
+RUN mix local.hex --force &&\
+ mix local.rebar --force &&\
+ mix archive.install --force https://github.com/phoenixframework/archives/raw/master/phx_new.ez
+
 RUN mix deps.get
 
 # install node and install dependencies
