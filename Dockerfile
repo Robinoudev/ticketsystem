@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . /app
 
 RUN apt-get update
-RUN apt-get install --yes build-essential inotify-tools postgresql-client
+RUN apt-get install --yes build-essential inotify-tools postgresql-client erlang
 
 RUN mix local.hex --force
 RUN mix local.rebar --force
