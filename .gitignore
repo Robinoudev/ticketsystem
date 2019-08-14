@@ -28,3 +28,4 @@ ticketsystem-*.tar
 /priv/static/
 
 .elixir_ls/
+tmp/
