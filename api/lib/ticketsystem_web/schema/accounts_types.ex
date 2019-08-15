@@ -1,6 +1,5 @@
 defmodule TicketsystemWeb.Schema.AccountsTypes do
   use Absinthe.Schema.Notation
-  require IEx
   import AbsintheErrorPayload.Payload
   import_types AbsintheErrorPayload.ValidationMessageTypes
 
@@ -27,7 +26,6 @@ defmodule TicketsystemWeb.Schema.AccountsTypes do
   object :user_mutations do
     field :create_user, type: :user_payload, description: "Create a new user" do
       arg :user, :create_user_params
-       IEx.pry
       resolve &AccountsResolver.create_user/3
       middleware &build_payload/2
     end

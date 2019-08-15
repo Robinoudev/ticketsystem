@@ -12,15 +12,6 @@ defmodule TicketsystemWeb.Schema do
   end
 
   mutation do
-    # @desc "Create a user"
-    # field :create_user, type: :user do
-    #   arg(:name, non_null(:string))
-    #   arg(:username, non_null(:string))
-    #   arg(:email, non_null(:string))
-    #   arg(:password, non_null(:string))
-    #
-    #   resolve(&Resolvers.Accounts.create_user/3)
-    # end
     import_fields :user_mutations
 
     @desc "Login a user"

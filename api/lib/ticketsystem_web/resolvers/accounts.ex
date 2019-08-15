@@ -8,7 +8,10 @@ defmodule TicketsystemWeb.Resolvers.Accounts do
   end
 
   def create_user(_parent, args, _resolution) do
-    Ticketsystem.Accounts.create_user(args)
+    case Ticketsystem.Accounts.create_user(args.user) do
+      {:error, %Ecto.Changeset{} = changeset} -> {:ok, changeset}
+      {:ok, user} -> {:ok, user}
+    end
   end
 
   def login(_parent, %{email: email, password: password}, _resolution) do
