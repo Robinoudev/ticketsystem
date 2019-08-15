@@ -35,12 +35,12 @@ defmodule Ticketsystem.MixProject do
   def application do
     [
       mod: {Ticketsystem.Application, []},
-      extra_applications: [:logger, :runtime_tools, :ex_machina]
+      extra_applications: [:logger, :runtime_tools]
     ]
   end
 
   # Specifies which paths to compile per environment.
-  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(:test), do: ["lib", "test/support", "test/factories"]
   defp elixirc_paths(_), do: ["lib"]
 
   # Specifies your project dependencies.
@@ -59,7 +59,7 @@ defmodule Ticketsystem.MixProject do
       {:absinthe, "~> 1.4.0"},
       {:absinthe_plug, "~> 1.4.7"},
       {:excoveralls, "~> 0.11", only: :test},
-      {:ex_machina, "~> 2.3"},
+      {:ex_machina, "~> 2.3", only: :test},
       {:guardian, "~> 2.0.0"},
       {:comeonin, "~> 5.1.2"},
       {:bcrypt_elixir, "~> 2.0.3"},
@@ -76,6 +76,7 @@ defmodule Ticketsystem.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
+      "ecto.seed": ["run priv/repo/seeds.exs"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate", "test"]
