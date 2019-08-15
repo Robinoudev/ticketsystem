@@ -1,17 +1,39 @@
-version: '3'
-services:
-  db:
-    image: postgres
-    volumes:
-      - ./tmp/db:/var/lib/postgresql/data
-    ports:
-      - "5431:5432"
+version: "3"
 
-  web:
-    build: .
+services:
+  api:
+    build:
+      context: ./api
     ports:
-      - "4000:4000"
-    volumes:
-      - .:/app
+      - 4000:4000
     depends_on:
       - db
+    command: bin/run
+    working_dir: /app/user
+    volumes:
+      - ./api:/app/user
+
+
+  db:
+    image: postgres
+    ports:
+      - 5431:5432
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+
+  e2e_api:
+    build:
+      context: ./api
+    ports:
+      - 4001:4001
+    depends_on:
+      - db
+    command: bin/run --seed
+    working_dir: /app/user
+    volumes:
+      - ./api:/app/user
+    environment:
+      - MIX_ENV=e2e
+
+volumes:
+  dbdata:
