@@ -18,6 +18,7 @@ before_script:
   - psql --version
   - psql -c 'CREATE DATABASE ticketsystem_test' -U postgres
   - psql -c 'CREATE ROLE travis SUPERUSER LOGIN CREATEDB;' -U postgres
+  - cd api
 
 script:
   - mix deps.get
