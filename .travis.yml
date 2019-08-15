@@ -21,6 +21,7 @@ before_script:
   - psql -c 'CREATE ROLE travis SUPERUSER LOGIN CREATEDB;' -U postgres
 
 script:
+  - mix ecto.reset
   - mix format
   - mix coveralls.travis
 
