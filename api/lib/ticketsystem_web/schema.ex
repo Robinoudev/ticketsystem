@@ -13,13 +13,6 @@ defmodule TicketsystemWeb.Schema do
 
   mutation do
     import_fields :user_mutations
-
-    @desc "Login a user"
-    field :login, type: :user do
-      arg(:email, non_null(:string))
-      arg(:password, non_null(:string))
-
-      resolve(&Resolvers.Accounts.login/3)
-    end
+    import_fields :login_mutation
   end
 end

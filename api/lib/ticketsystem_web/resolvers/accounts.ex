@@ -14,7 +14,7 @@ defmodule TicketsystemWeb.Resolvers.Accounts do
     end
   end
 
-  def login(_parent, %{email: email, password: password}, _resolution) do
+  def login(_parent, %{user: %{email: email, password: password}}, _resolution) do
     with {:ok, user} <- Ticketsystem.AuthHelper.login_with_email_pass(email, password),
          {:ok, jwt, _} <- Ticketsystem.Guardian.encode_and_sign(user) do
       {:ok, %{token: jwt, user: user}}

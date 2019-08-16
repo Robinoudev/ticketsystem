@@ -30,4 +30,19 @@ defmodule TicketsystemWeb.Schema.AccountsTypes do
       middleware &build_payload/2
     end
   end
+
+  input_object :login_params, description: "Login a user" do
+    field :email, non_null(:string), description: "Email"
+    field :password, non_null(:string), description: "Password"
+  end
+
+  payload_object(:login_payload, :user)
+
+  object :login_mutation do
+    field :login_user, type: :login_payload, description: "Login a user" do
+      arg :user, :login_params
+      resolve &AccountsResolver.login/3
+      middleware &build_payload/2
+    end
+  end
 end
