@@ -20,7 +20,7 @@ defmodule Ticketsystem.Accounts.User do
     |> validate_format(:email, ~r/@/)
     |> validate_length(:password, min: 8)
     |> unique_constraint(:username, name: :users_username_index)
-    |> unique_constraint(:email, name: :users_username_email_index)
+    |> unique_constraint(:email, name: :users_email_index)
     |> put_password_hash()
   end
 
