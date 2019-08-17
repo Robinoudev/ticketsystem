@@ -28,7 +28,7 @@ defmodule Ticketsystem.ContextTest do
       req_headers =
         TicketsystemWeb.Resolvers.Accounts.login(
           %{},
-          %{email: user.email, password: user.password},
+          %{user: %{email: user.email, password: user.password}},
           %{}
         )
         |> elem(1)
@@ -51,7 +51,6 @@ defmodule Ticketsystem.ContextTest do
         |> Ticketsystem.Context.call({})
 
       assert conn.private[:absinthe] == nil
-      # require IEx; IEx.pry()
     end
   end
 end

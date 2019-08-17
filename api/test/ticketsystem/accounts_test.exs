@@ -31,7 +31,6 @@ defmodule Ticketsystem.AccountsTest do
 
     test "list_users/0 returns all users" do
       user_fixture()
-      # require IEx; IEx.pry()
       users = Accounts.list_users()
       assert length(users) == 1
     end
