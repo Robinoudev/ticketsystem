@@ -8,32 +8,59 @@ defmodule TicketsystemWeb.Resolvers.AccountsTest do
     @unauthorized_context %{}
 
     setup do
-      %{user: insert(:user)}
+      %{
+        user: insert(:user),
+        login_mutation: """
+          mutation Login ($user: LoginParams) {
+            loginUser (user: $user) {
+            messages {
+                field
+                message
+              }
+              result {
+                email
+                token
+              }
+            }
+          }
+        """,
+        users_query: """
+          query Users {
+            usersQuery {
+              messages {
+                message
+              }
+              result {
+                email
+              }
+            }
+          }
+        """,
+        create_user_mutation: """
+          mutation CreateUser ($params: CreateUserParams) {
+            createUser (user: $params) {
+              messages {
+                field
+                message
+              }
+              result {
+                email
+                name
+                username
+              }
+              successful
+            }
+          }
+        """
+      }
     end
 
     test "Can return a token on login", context do
-      mutation = """
-      mutation Login {
-        loginUser (user: {
-          email: "#{context.user.email}",
-          password: "password"
-        }) {
-        messages {
-            field
-            message
-          }
-          result {
-            email
-            token
-          }
-        }
-      }
-      """
-
       {:ok, result} = Absinthe.run(
-        mutation,
-        Schema,
-        context: @unauthorized_context
+        context.login_mutation,
+        TicketsystemWeb.Schema,
+        context: %{},
+        variables: %{"user" => %{"email" => context.user.email, "password" => "password"}}
       )
 
       assert result.data["loginUser"]["result"]["email"] == context.user.email
@@ -41,79 +68,32 @@ defmodule TicketsystemWeb.Resolvers.AccountsTest do
     end
 
     test "Checks for valid credentials", context do
-      mutation = """
-      mutation Login {
-        loginUser (user: {
-          email: "#{context.user.email}",
-          password: "wrongpassword"
-        }) {
-        messages {
-            field
-            message
-          }
-          result {
-            email
-            token
-          }
-        }
-      }
-      """
-
       {:ok, result} = Absinthe.run(
-        mutation,
+        context.login_mutation,
         Schema,
-        context: @unauthorized_context
+        context: %{},
+        variables: %{"user" => %{"email" => context.user.email, "password" => "wrongpassword"}}
       )
 
       assert result.data["loginUser"] == nil
       assert Enum.at(result.errors, 0).message == "Invalid credentials"
     end
 
-    test "Checks if user exists on login" do
-      mutation = """
-      mutation Login {
-        loginUser (user: {
-          email: "userthatdoesnotexist@email.com",
-          password: "password"
-        }) {
-        messages {
-            field
-            message
-          }
-          result {
-            email
-            token
-          }
-        }
-      }
-      """
-
+    test "Checks if user exists on login", context do
       {:ok, result} = Absinthe.run(
-        mutation,
+        context.login_mutation,
         Schema,
-        context: @unauthorized_context
+        context: %{},
+        variables: %{"user" => %{"email" => "userthatdoesnotexist@email.com", "password" => "password"}}
       )
 
       assert result.data["loginUser"] == nil
       assert Enum.at(result.errors, 0).message == "User not found"
     end
 
-    test "Returns unauthorized when no context is provided" do
-      query = """
-      query Users {
-        usersQuery {
-          messages {
-            message
-          }
-          result {
-            email
-          }
-        }
-      }
-      """
-
+    test "Returns unauthorized not logged in", context do
       {:ok, result} = Absinthe.run(
-        query,
+        context.users_query,
         Schema,
         context: @unauthorized_context
       )
@@ -138,61 +118,20 @@ defmodule TicketsystemWeb.Resolvers.AccountsTest do
 
       absinthe = conn.private[:absinthe]
 
-      query = """
-      query Users {
-        usersQuery {
-          messages {
-            message
-          }
-          result {
-            name
-            username
-            email
-          }
-        }
-      }
-      """
-
       {:ok, result} = Absinthe.run(
-        query,
+        context.users_query,
         Schema,
         context: absinthe.context
       )
 
-      assert result.data["usersQuery"]["result"] == [
-        %{
-          "email" => context.user.email,
-          "name" => context.user.name,
-          "username" => context.user.username
-        }
-      ]
+      assert result.data["usersQuery"]["result"] == [%{ "email" => context.user.email,}]
     end
 
     test "Can create a user with valid input object", context do
-      mutation = """
-      mutation CreateUser {
-        createUser (user: {
-          email: "test2@test.com",
-          name: "test name",
-          username: "testusername",
-          password: "password"
-        }) {
-          messages {
-            message
-          }
-          result {
-            email
-            name
-            username
-          }
-          successful
-        }
-      }
-      """
-
       {:ok, %{data: %{"createUser" => result}}} = Absinthe.run(
-        mutation,
+        context.create_user_mutation,
         Schema,
+        variables: %{"params" => %{"email" => "test@email.com", "password" => "password", "name" => "name", "username" => "username"}},
         context: %{}
       )
 
@@ -207,32 +146,11 @@ defmodule TicketsystemWeb.Resolvers.AccountsTest do
     end
 
     test "Validates uniqueness of username", context do
-      mutation = """
-      mutation CreateUser {
-        createUser (user: {
-          email: "test2@test.com",
-          name: "test name",
-          username: "#{context.user.username}",
-          password: "password"
-        }) {
-          messages {
-            field
-            message
-          }
-          result {
-            email
-            name
-            username
-          }
-          successful
-        }
-      }
-      """
-
       {:ok, result} = Absinthe.run(
-        mutation,
+        context.create_user_mutation,
         Schema,
-        context: %{}
+        context: %{},
+        variables: %{"params" => %{"email" => "test@email.com", "password" => "password", "name" => "name", "username" => context.user.username}}
       )
 
       assert result.data["createUser"]["messages"] == [%{"field" => "username", "message" => "has already been taken"}]
@@ -240,32 +158,11 @@ defmodule TicketsystemWeb.Resolvers.AccountsTest do
     end
 
     test "Validates uniqueness of email", context do
-      mutation = """
-      mutation CreateUser {
-        createUser (user: {
-          email: "#{context.user.email}",
-          name: "test name",
-          username: "testusername",
-          password: "password"
-        }) {
-          messages {
-            field
-            message
-          }
-          result {
-            email
-            name
-            username
-          }
-          successful
-        }
-      }
-      """
-
       {:ok, result} = Absinthe.run(
-        mutation,
+        context.create_user_mutation,
         Schema,
-        context: %{}
+        context: %{},
+        variables: %{"params" => %{"email" => context.user.email, "password" => "password", "name" => "name", "username" => "someusername"}}
       )
 
       assert result.data["createUser"]["messages"] == [%{"field" => "email", "message" => "has already been taken"}]
