@@ -1,6 +1,9 @@
 defmodule TicketsystemWeb.Schema do
   use Absinthe.Schema
+  import_types AbsintheErrorPayload.ValidationMessageTypes
+
   import_types(TicketsystemWeb.Schema.AccountsTypes)
+  import_types(TicketsystemWeb.Schema.AccountsInputs)
 
   query do
     import_fields :users_query

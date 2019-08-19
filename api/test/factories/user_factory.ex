@@ -4,7 +4,6 @@ defmodule Ticketsystem.UserFactory do
       def user_factory do
         %Ticketsystem.Accounts.User{
           email: Faker.Internet.email,
-          id: Faker.Address.building_number,
           inserted_at: ~N[2019-08-15 12:00:41],
           name: Faker.Name.name,
           password: nil,
