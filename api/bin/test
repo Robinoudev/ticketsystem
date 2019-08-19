@@ -1,0 +1,4 @@
+#!/bin/bash
+set -e
+
+iex -S mix coveralls --trace

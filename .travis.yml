@@ -13,14 +13,15 @@ before_install:
   - sudo apt-get install -y postgresql-11 postgresql-client-11
   - sudo cp /etc/postgresql/{9.6,11}/main/pg_hba.conf
   - sudo service postgresql restart 11
+  - cd api
 
 before_script:
   - psql --version
-  - psql -c 'CREATE DATABASE ticketsystem_test' -U postgres
+  - psql -c 'CREATE DATABASE travis_test_db' -U postgres
   - psql -c 'CREATE ROLE travis SUPERUSER LOGIN CREATEDB;' -U postgres
+  - cp config/test.travis.exs config/test.exs
 
 script:
-  - mix deps.get
   - mix ecto.reset
   - mix format
   - mix coveralls.travis

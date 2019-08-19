@@ -1,0 +1,22 @@
+#!/bin/bash
+set -e
+
+mix deps.get
+
+if [ "$1" == '--seed' ]; then
+  # Drop, recreate, migrate and seed database when --seed param is given to bin/run
+  mix ecto.reset
+  mix ecto.seed
+else
+  # Create and migrate database
+  create_status=$(mix ecto.create)
+  mix ecto.migrate
+
+  if [[ $create_status != *"has already been created"* ]]; then
+    echo -e ":postgres: New database - running seeds"
+    bin/seed
+  fi
+fi
+
+# Start the server
+mix phx.server
