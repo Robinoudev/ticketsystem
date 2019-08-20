@@ -9,6 +9,7 @@ defmodule TicketsystemWeb.Schema.AccountsTypes do
     field :name, :string
     field :username, :string
     field :email, :string
+    field :company, :company_type
   end
 
   payload_object(:users_query_payload, list_of(:user_type))

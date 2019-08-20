@@ -2,12 +2,15 @@ defmodule Ticketsystem.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Ticketsystem.Companies.Company
+
   schema "users" do
     field :email, :string
     field :name, :string
     field :password_hash, :string
     field :username, :string
     field :password, :string, virtual: true
+    belongs_to :company, Company
 
     timestamps()
   end
