@@ -15,13 +15,14 @@ defmodule Ticketsystem.Companies do
     Repo.all(Company)
   end
 
-  def insert_or_update_company(attrs) do
-    company =
-      case Ticketsystem.Repo.get_by(Company, name: attrs.name) do
-        nil -> %Company{name: attrs.name}
-        company -> company
-      end
+  @doc """
+  Gets a single company.
+  """
+  def get_company(id), do: Repo.get(Company, id)
+
+  def insert_or_update_company(attrs \\ {}) do
+    %Company{}
       |> Company.changeset(attrs)
-      |> Ticketsystem.Repo.insert_or_update
+      |> Repo.insert_or_update
   end
 end

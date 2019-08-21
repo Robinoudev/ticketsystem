@@ -16,6 +16,14 @@ defmodule Ticketsystem.Accounts do
   end
 
   @doc """
+  Returns the list of users of given company.
+  """
+  def list_users_of_company!(company_id) do
+    Repo.all(from u in Ticketsystem.Accounts.User, where: u.company_id == ^company_id)
+    |> Repo.preload(:company)
+  end
+
+  @doc """
   Gets a single user.
   """
   def get_user!(id), do: Repo.get!(User, id)

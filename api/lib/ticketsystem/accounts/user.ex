@@ -18,8 +18,8 @@ defmodule Ticketsystem.Accounts.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:name, :username, :email, :password])
-    |> validate_required([:name, :username, :email, :password])
+    |> cast(attrs, [:name, :username, :email, :password, :company_id])
+    |> validate_required([:name, :username, :email, :password, :company_id])
     |> validate_format(:email, ~r/@/)
     |> validate_length(:password, min: 8)
     |> unique_constraint(:username, name: :users_username_index)
