@@ -9,6 +9,7 @@ defmodule TicketsystemWeb.Schema.CompaniesInput do
   end
 
   input_object :company_mutation_params, description: "Create a company" do
+    field :id, :id, description: "ID of company"
     field :name, non_null(:string), description: "Required name"
   end
 

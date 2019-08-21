@@ -1,5 +1,7 @@
 defmodule TicketsystemWeb.Resolvers.Accounts do
-  def list_users(_parent, _args, %{context: %{current_user: _user}}) do
+  alias Ticketsystem.Accounts
+
+  def list_users(_parent, _args, %{context: %{current_user: user}}) do
     {:ok, Ticketsystem.Accounts.list_users()}
   end
 

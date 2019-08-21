@@ -19,7 +19,7 @@ defmodule Ticketsystem.Accounts do
   Returns the list of users of given company.
   """
   def list_users_of_company!(company_id) do
-    Repo.all(from u in Ticketsystem.Accounts.User, where: u.company_id == ^company_id)
+    Repo.all(from u in User, where: u.company_id == ^company_id)
     |> Repo.preload(:company)
   end
 
