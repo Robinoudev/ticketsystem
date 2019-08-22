@@ -1,7 +1,7 @@
 defmodule TicketsystemWeb.Schema.CompaniesType do
   use Absinthe.Schema.Notation
   import AbsintheErrorPayload.Payload
-  import Absinthe.Resolution.Helpers, only: [dataloader: 1]
+  import Absinthe.Resolution.Helpers, only: [dataloader: 3]
 
   alias TicketsystemWeb.Resolvers.Companies, as: CompaniesResolver
   alias TicketsystemWeb.Data
@@ -9,7 +9,7 @@ defmodule TicketsystemWeb.Schema.CompaniesType do
   object :company_type, description: "Company query type" do
     field :id, :id
     field :name, :string
-    field :users, list_of(:user_type), resolve: dataloader(Data)
+    field :users, list_of(:user_type), resolve: dataloader(Data, :users, args: %{order_by: :id})
   end
 
   payload_object(:companies_query_payload, list_of(:company_type))
