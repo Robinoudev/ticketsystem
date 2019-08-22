@@ -17,11 +17,6 @@ defmodule Ticketsystem.Companies do
   end
 
   @doc """
-  Gets a single company.
-  """
-  def get_company(id), do: Repo.get(Company, id)
-
-  @doc """
   Gets the company from `attrs.id` if any and updates otherwise inserts new Company
   """
   def insert_or_update_company(attrs \\ {}) do

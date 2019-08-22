@@ -4,7 +4,7 @@ defmodule TicketsystemWeb.Resolvers.CompaniesMutationTest do
   import Ticketsystem.AbsintheHelpers
   alias Ticketsystem.Companies
 
-  describe "#companies_mutation" do
+  describe "Companies resolver mutations" do
     setup do
       %{
         user: insert(:user),
