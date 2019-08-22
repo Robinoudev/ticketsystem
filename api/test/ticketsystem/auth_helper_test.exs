@@ -5,8 +5,6 @@ defmodule Ticketsystem.AuthHelperTest do
   alias Ticketsystem.AuthHelper
 
   describe "auth_helper" do
-    alias Ticketsystem.Accounts
-
     setup do
       %{company: insert(:company)}
     end

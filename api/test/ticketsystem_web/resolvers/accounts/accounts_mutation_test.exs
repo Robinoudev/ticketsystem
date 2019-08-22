@@ -1,7 +1,6 @@
 defmodule TicketsystemWeb.Resolvers.AccountsMutationTest do
   use TicketsystemWeb.ConnCase, async: true
   use Plug.Test
-  import Ticketsystem.Factory
   alias TicketsystemWeb.Schema
 
   describe "Accounts resolver mutations" do
