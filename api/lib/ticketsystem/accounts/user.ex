@@ -24,6 +24,7 @@ defmodule Ticketsystem.Accounts.User do
     |> validate_length(:password, min: 8)
     |> unique_constraint(:username, name: :users_username_index)
     |> unique_constraint(:email, name: :users_email_index)
+    |> foreign_key_constraint(:company_id, name: :users_company_id_fkey)
     |> put_password_hash()
   end
 

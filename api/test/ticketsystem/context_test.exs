@@ -1,34 +1,17 @@
 defmodule Ticketsystem.ContextTest do
   use TicketsystemWeb.ConnCase
-
   use Plug.Test
+  import Ticketsystem.Factory
 
   describe "Context Plug" do
-    # alias TicketsystemWeb.Resolvers.Accounts
-
-    @user_attrs %{
-      email: "email@email.com",
-      name: "name",
-      password: "password",
-      username: "username"
-    }
-
-    def user_fixture(attrs \\ %{}) do
-      {:ok, user} =
-        attrs
-        |> Enum.into(@user_attrs)
-        |> Ticketsystem.Accounts.create_user()
-
-      user
-    end
-
     test "Validates token in req_header" do
-      user = user_fixture()
+      company = insert(:company)
+      user = insert(:user, company: company)
 
       req_headers =
         TicketsystemWeb.Resolvers.Accounts.login(
           %{},
-          %{user: %{email: user.email, password: user.password}},
+          %{user: %{email: user.email, password: "password"}},
           %{}
         )
         |> elem(1)

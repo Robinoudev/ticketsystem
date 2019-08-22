@@ -23,8 +23,8 @@ defmodule TicketsystemWeb.Resolvers.AccountsMutationTest do
           }
         """,
         create_user_mutation: """
-          mutation CreateUser ($params: CreateUserParams) {
-            createUser (user: $params) {
+          mutation CreateUser ($params: UserMutationParams!) {
+            userMutation (user: $params) {
               messages {
                 field
                 message
@@ -33,6 +33,7 @@ defmodule TicketsystemWeb.Resolvers.AccountsMutationTest do
                 email
                 name
                 username
+                companyId
               }
               successful
             }
@@ -78,44 +79,85 @@ defmodule TicketsystemWeb.Resolvers.AccountsMutationTest do
     end
 
     test "Can create a user with valid input object", context do
-      {:ok, %{data: %{"createUser" => result}}} = Absinthe.run(
+      company = insert(:company)
+
+      {:ok, %{data: %{"userMutation" => result}}} = Absinthe.run(
         context.create_user_mutation,
         Schema,
-        variables: %{"params" => %{"email" => "test@email.com", "password" => "password", "name" => "name", "username" => "username"}},
+        variables: %{
+          "params" => %{
+            "email" => "test@email.com",
+            "password" => "password",
+            "name" => "name", "username" => "username",
+            "companyId" => company.id
+          }
+        },
         context: %{}
       )
 
       new_user = Enum.at(Ticketsystem.Accounts.list_users(), -1)
 
-      assert result["result"] == %{
+      assert result["result"] ==
+        %{
           "email" => new_user.email,
           "name" => new_user.name,
-          "username" => new_user.username
+          "username" => new_user.username,
+          "companyId" => "#{company.id}"
         }
       assert Ticketsystem.Accounts.list_users == [context.user, new_user]
     end
 
     test "Validates uniqueness of username", context do
+      company = insert(:company)
+
       {:ok, result} = Absinthe.run(
         context.create_user_mutation,
         Schema,
         context: %{},
-        variables: %{"params" => %{"email" => "test@email.com", "password" => "password", "name" => "name", "username" => context.user.username}}
+        variables: %{
+          "params" => %{
+            "email" => "test@email.com",
+            "password" => "password",
+            "name" => "name",
+            "username" => context.user.username,
+            "companyId" => company.id
+          }
+        }
       )
 
-      assert result.data["createUser"]["messages"] == [%{"field" => "username", "message" => "has already been taken"}]
+      assert result.data["userMutation"]["messages"] == [
+        %{
+          "field" => "username",
+          "message" => "has already been taken"
+        }
+      ]
       assert Ticketsystem.Accounts.list_users == [context.user]
     end
 
     test "Validates uniqueness of email", context do
+      company = insert(:company)
+
       {:ok, result} = Absinthe.run(
         context.create_user_mutation,
         Schema,
         context: %{},
-        variables: %{"params" => %{"email" => context.user.email, "password" => "password", "name" => "name", "username" => "someusername"}}
+        variables: %{
+          "params" => %{
+            "email" => context.user.email,
+            "password" => "password",
+            "name" => "name",
+            "username" => "someusername",
+            "companyId" => company.id
+          }
+        }
       )
 
-      assert result.data["createUser"]["messages"] == [%{"field" => "email", "message" => "has already been taken"}]
+      assert result.data["userMutation"]["messages"] == [
+        %{
+          "field" => "email",
+          "message" => "has already been taken"
+        }
+      ]
       assert Ticketsystem.Accounts.list_users == [context.user]
     end
   end

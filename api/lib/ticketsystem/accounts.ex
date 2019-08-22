@@ -16,14 +16,6 @@ defmodule Ticketsystem.Accounts do
   end
 
   @doc """
-  Returns the list of users of given company.
-  """
-  def list_users_of_company!(company_id) do
-    Repo.all(from u in User, where: u.company_id == ^company_id)
-    |> Repo.preload(:company)
-  end
-
-  @doc """
   Gets a single user.
   """
   def get_user!(id), do: Repo.get!(User, id)
@@ -35,28 +27,5 @@ defmodule Ticketsystem.Accounts do
     %User{}
     |> User.changeset(attrs)
     |> Repo.insert()
-  end
-
-  @doc """
-  Updates a user.
-  """
-  def update_user(%User{} = user, attrs) do
-    user
-    |> User.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Deletes a User.
-  """
-  def delete_user(%User{} = user) do
-    Repo.delete(user)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking user changes.
-  """
-  def change_user(%User{} = user) do
-    User.changeset(user, %{})
   end
 end

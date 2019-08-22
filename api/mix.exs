@@ -66,7 +66,8 @@ defmodule Ticketsystem.MixProject do
       {:ex_doc, "~> 0.19", only: :dev, runtime: false},
       {:absinthe_error_payload, "~> 1.0"},
       {:faker, "~> 0.12", only: :test},
-      {:dataloader, "~> 1.0.0"}
+      {:dataloader, "~> 1.0.0"},
+      {:mix_test_watch, "~> 0.9.0", only: :dev, runtime: false}
     ]
   end
 
