@@ -8,7 +8,6 @@ defmodule Ticketsystem.Companies do
 
   alias Ticketsystem.Companies.Company
 
-
   @doc """
   Returns list of companies
   """
@@ -25,9 +24,10 @@ defmodule Ticketsystem.Companies do
         {:ok, _value} -> Repo.get(Company, attrs.id)
         :error -> %Company{}
       end
-      |> Company.changeset(attrs)
-      |> Repo.insert_or_update
 
-    company
+    case company do
+      nil -> nil
+      _ -> company |> Company.changeset(attrs) |> Repo.insert_or_update()
+    end
   end
 end

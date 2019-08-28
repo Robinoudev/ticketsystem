@@ -114,5 +114,26 @@ defmodule TicketsystemWeb.Resolvers.CompaniesMutationTest do
       assert length(companies) == 2
       assert List.last(companies).name == second_company.name
     end
+
+    test "should throw company not found error when id doesn't exist", ctx do
+      variables = %{
+        "company" => %{
+          "id" => "1234",
+          "name" => "Name"
+        }
+      }
+
+      {:ok, %{data: %{"companyMutation" => result}}} = Absinthe.run(
+        ctx.company_mutation,
+        Schema,
+        context: context_for(ctx.user),
+        variables: variables
+      )
+
+      companies = Companies.list_companies()
+
+      assert result["messages"] == [%{"field" => "id", "message" => "does not exist"}]
+      assert length(companies) == 0
+    end
   end
 end

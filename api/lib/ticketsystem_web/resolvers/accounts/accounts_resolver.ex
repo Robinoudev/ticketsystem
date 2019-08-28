@@ -1,5 +1,8 @@
 defmodule TicketsystemWeb.Resolvers.Accounts do
-  alias Ticketsystem.{ Accounts, AuthHelper, Guardian }
+  @moduledoc """
+  Accounts resolver
+  """
+  alias Ticketsystem.{Accounts, AuthHelper, Guardian}
 
   def list_users(_parent, _args, %{context: %{current_user: _user}}) do
     {:ok, Accounts.list_users()}
@@ -19,15 +22,15 @@ defmodule TicketsystemWeb.Resolvers.Accounts do
   def login(_parent, %{user: %{email: email, password: password}}, _resolution) do
     with {:ok, user} <- AuthHelper.login_with_email_pass(email, password),
          {:ok, jwt, _} <- Guardian.encode_and_sign(user) do
-      user_fields = %{
-        token: jwt,
-        id: user.id,
-        email: user.email,
-        username: user.username,
-        name: user.name
-      }
+            user_fields = %{
+              token: jwt,
+              id: user.id,
+              email: user.email,
+              username: user.username,
+              name: user.name
+            }
 
-      {:ok, user_fields}
+            {:ok, user_fields}
     end
   end
 end
