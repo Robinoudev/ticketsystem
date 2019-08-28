@@ -23,13 +23,13 @@ defmodule Ticketsystem.AuthHelperTest do
       user = insert(:user, company: context.company)
 
       assert AuthHelper.login_with_email_pass(user.email, "wrongpassword") ==
-               {:error, "Invalid credentials"}
+               {:error, "invalid password provided"}
     end
 
     test "login_with_email_pass/2 returns User not found when email is wrong" do
 
       assert AuthHelper.login_with_email_pass("invalid@email.com", "password") ==
-               {:error, "User not found"}
+               {:error, "no user with given email"}
     end
   end
 end

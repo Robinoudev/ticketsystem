@@ -9,7 +9,7 @@ defmodule TicketsystemWeb.Resolvers.AccountsMutationTest do
         user: insert(:user),
         login_mutation: """
           mutation Login ($user: LoginParams) {
-            loginUser (user: $user) {
+            loginMutation (user: $user) {
             messages {
                 field
                 message
@@ -49,32 +49,32 @@ defmodule TicketsystemWeb.Resolvers.AccountsMutationTest do
         variables: %{"user" => %{"email" => context.user.email, "password" => "password"}}
       )
 
-      assert result.data["loginUser"]["result"]["email"] == context.user.email
-      assert result.data["loginUser"]["result"]["token"] != nil
+      assert result.data["loginMutation"]["result"]["email"] == context.user.email
+      assert result.data["loginMutation"]["result"]["token"] != nil
     end
 
     test "Checks for valid credentials", context do
-      {:ok, result} = Absinthe.run(
+      {:ok, %{data: %{"loginMutation" => result}}} = Absinthe.run(
         context.login_mutation,
         Schema,
         context: %{},
         variables: %{"user" => %{"email" => context.user.email, "password" => "wrongpassword"}}
       )
 
-      assert result.data["loginUser"] == nil
-      assert Enum.at(result.errors, 0).message == "Invalid credentials"
+      assert result["result"] == nil
+      assert result["messages"] == [%{"field" => "credentials", "message" => "invalid password provided"}]
     end
 
     test "Checks if user exists on login", context do
-      {:ok, result} = Absinthe.run(
+      {:ok, %{data: %{"loginMutation" => result}}} = Absinthe.run(
         context.login_mutation,
         Schema,
         context: %{},
         variables: %{"user" => %{"email" => "userthatdoesnotexist@email.com", "password" => "password"}}
       )
 
-      assert result.data["loginUser"] == nil
-      assert Enum.at(result.errors, 0).message == "User not found"
+      assert result["result"] == nil
+      assert result["messages"] == [%{"field" => "credentials", "message" => "no user with given email"}]
     end
 
     test "Can create a user with valid input object", context do

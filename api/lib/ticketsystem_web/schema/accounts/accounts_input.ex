@@ -40,7 +40,7 @@ defmodule TicketsystemWeb.Schema.AccountsInputs do
   payload_object(:login_payload, :user_input)
 
   object :login_mutation do
-    field :login_user, type: :login_payload, description: "Login a user" do
+    field :login_mutation, type: :login_payload, description: "Login a user" do
       arg :user, :login_params
       resolve &AccountsResolver.login/3
       middleware &build_payload/2

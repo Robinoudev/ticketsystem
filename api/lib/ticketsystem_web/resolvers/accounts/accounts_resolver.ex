@@ -3,13 +3,14 @@ defmodule TicketsystemWeb.Resolvers.Accounts do
   Accounts resolver
   """
   alias Ticketsystem.{Accounts, AuthHelper, Guardian}
+  alias AbsintheErrorPayload.ValidationMessage
 
   def list_users(_parent, _args, %{context: %{current_user: _user}}) do
     {:ok, Accounts.list_users()}
   end
 
   def list_users(_parent, _args, _resolution) do
-    {:error, "Access denied"}
+    {:ok, %ValidationMessage{field: :authorization, code: "denied", message: "not authorized to access this resource"}}
   end
 
   def create_user(_parent, args, _resolution) do
@@ -31,6 +32,8 @@ defmodule TicketsystemWeb.Resolvers.Accounts do
             }
 
             {:ok, user_fields}
+    else
+      {:error, error} -> {:ok, %ValidationMessage{field: :credentials, code: "invalid", message: "#{error}"}}
     end
   end
 end

@@ -12,10 +12,10 @@ defmodule Ticketsystem.AuthHelper do
         {:ok, user}
 
       user ->
-        {:error, "Invalid credentials"}
+        {:error, "invalid password provided"}
 
       true ->
-        {:error, "User not found"}
+        {:error, "no user with given email"}
     end
   end
 end

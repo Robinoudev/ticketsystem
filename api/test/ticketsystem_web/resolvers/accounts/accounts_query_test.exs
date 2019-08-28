@@ -11,6 +11,7 @@ defmodule TicketsystemWeb.Resolvers.AccountsQueryTest do
           query Users {
             usersQuery {
               messages {
+                field
                 message
               }
               result {
@@ -23,13 +24,12 @@ defmodule TicketsystemWeb.Resolvers.AccountsQueryTest do
     end
 
     test "Returns unauthorized when not logged in", ctx do
-      {:ok, result} = Absinthe.run(
+      {:ok, %{data: %{"usersQuery" => result}}} = Absinthe.run(
         ctx.users_query,
         Schema
       )
 
-      assert result.data["usersQuery"] == nil
-      assert List.first(result.errors).message == "Access denied"
+      assert result["messages"] == [%{"field" => "authorization", "message" => "not authorized to access this resource"}]
     end
 
     test "Returns users when a valid context is provided", ctx do
