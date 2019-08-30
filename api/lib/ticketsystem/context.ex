@@ -1,4 +1,7 @@
 defmodule Ticketsystem.Context do
+  @moduledoc """
+  Context Plug to build and validate authorization context
+  """
   @behaviour Plug
 
   import Plug.Conn
@@ -29,12 +32,12 @@ defmodule Ticketsystem.Context do
         {:error, "Invalid authorization token provided"}
 
       sub ->
-          sub
-          |> elem(1)
-          |> case do
-            nil -> {:error, "Invalid token"}
-            claim -> Ticketsystem.Guardian.resource_from_claims(claim)
-          end
+        sub
+        |> elem(1)
+        |> case do
+          nil -> {:error, "Invalid token"}
+          claim -> Ticketsystem.Guardian.resource_from_claims(claim)
+        end
     end
   end
 end

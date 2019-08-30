@@ -1,8 +1,15 @@
 defmodule Ticketsystem.AbsintheHelpers do
+  @moduledoc """
+  Builds an authorized context for a given user to test queries/mutations
+  """
+
+  alias Ticketsystem.Context
+  alias TicketsystemWeb.Resolvers.Accounts
+
   defmacro context_for(user) do
     quote do
       req_headers =
-        TicketsystemWeb.Resolvers.Accounts.login(
+        Accounts.login(
           %{},
           %{user: %{email: unquote(user).email, password: "password"}},
           %{}
@@ -12,7 +19,7 @@ defmodule Ticketsystem.AbsintheHelpers do
       conn =
         build_conn()
         |> put_req_header("authorization", "Bearer #{req_headers.token}")
-        |> Ticketsystem.Context.call({})
+        |> Context.call({})
 
       absinthe = conn.private[:absinthe]
 

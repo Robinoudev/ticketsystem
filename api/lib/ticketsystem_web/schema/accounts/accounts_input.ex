@@ -1,4 +1,7 @@
 defmodule TicketsystemWeb.Schema.AccountsInputs do
+  @moduledoc """
+  Definition of mutation inputs for Accounts context
+  """
   use Absinthe.Schema.Notation
   import AbsintheErrorPayload.Payload
 
@@ -26,9 +29,9 @@ defmodule TicketsystemWeb.Schema.AccountsInputs do
 
   object :user_mutation do
     field :user_mutation, type: :user_payload, description: "Create a new user" do
-      arg :user, :user_mutation_params
-      resolve &AccountsResolver.create_user/3
-      middleware &build_payload/2
+      arg(:user, :user_mutation_params)
+      resolve(&AccountsResolver.create_user/3)
+      middleware(&build_payload/2)
     end
   end
 
@@ -41,9 +44,9 @@ defmodule TicketsystemWeb.Schema.AccountsInputs do
 
   object :login_mutation do
     field :login_mutation, type: :login_payload, description: "Login a user" do
-      arg :user, :login_params
-      resolve &AccountsResolver.login/3
-      middleware &build_payload/2
+      arg(:user, :login_params)
+      resolve(&AccountsResolver.login/3)
+      middleware(&build_payload/2)
     end
   end
 end

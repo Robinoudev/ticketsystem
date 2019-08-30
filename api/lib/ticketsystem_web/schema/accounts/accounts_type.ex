@@ -1,4 +1,7 @@
 defmodule TicketsystemWeb.Schema.AccountsTypes do
+  @moduledoc """
+  Definition of query fields for Accounts context
+  """
   use Absinthe.Schema.Notation
   import AbsintheErrorPayload.Payload
   import Absinthe.Resolution.Helpers, only: [dataloader: 1]
@@ -18,8 +21,8 @@ defmodule TicketsystemWeb.Schema.AccountsTypes do
 
   object :users_query do
     field :users_query, type: :users_query_payload, description: "query all users of a company" do
-      resolve &AccountsResolver.list_users/3
-      middleware &build_payload/2
+      resolve(&AccountsResolver.list_users/3)
+      middleware(&build_payload/2)
     end
   end
 end

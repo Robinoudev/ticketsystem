@@ -33,6 +33,7 @@ defmodule Ticketsystem.AccountsTest do
         "username" => "valid_username",
         "company_id" => context.company.id
       }
+
       assert {:ok, %User{} = user} = Accounts.create_user(attrs)
       assert user.email == "valid@email.com"
       assert user.name == "name"
@@ -48,6 +49,7 @@ defmodule Ticketsystem.AccountsTest do
         "username" => nil,
         "company_id" => nil
       }
+
       assert {:error, %Ecto.Changeset{}} = Accounts.create_user(attrs)
     end
   end

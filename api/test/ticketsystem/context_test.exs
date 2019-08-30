@@ -3,13 +3,16 @@ defmodule Ticketsystem.ContextTest do
   use Plug.Test
   import Ticketsystem.Factory
 
+  alias Ticketsystem.Context
+  alias TicketsystemWeb.Resolvers.Accounts
+
   describe "Context Plug" do
     test "Validates token in req_header" do
       company = insert(:company)
       user = insert(:user, company: company)
 
       req_headers =
-        TicketsystemWeb.Resolvers.Accounts.login(
+        Accounts.login(
           %{},
           %{user: %{email: user.email, password: "password"}},
           %{}
@@ -19,7 +22,7 @@ defmodule Ticketsystem.ContextTest do
       conn =
         build_conn()
         |> put_req_header("authorization", "Bearer #{req_headers.token}")
-        |> Ticketsystem.Context.call({})
+        |> Context.call({})
 
       assert conn.request_path == "/"
       absinthe = conn.private[:absinthe]
@@ -30,8 +33,8 @@ defmodule Ticketsystem.ContextTest do
     test "Wrong credentials give unauthorized error" do
       conn =
         build_conn()
-        |> Ticketsystem.Context.init()
-        |> Ticketsystem.Context.call({})
+        |> Context.init()
+        |> Context.call({})
 
       assert conn.private[:absinthe] == nil
     end

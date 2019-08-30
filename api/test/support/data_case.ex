@@ -13,6 +13,7 @@ defmodule Ticketsystem.DataCase do
   """
 
   use ExUnit.CaseTemplate
+  alias Ecto.Adapters.SQL.Sandbox
 
   using do
     quote do
@@ -26,10 +27,10 @@ defmodule Ticketsystem.DataCase do
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Ticketsystem.Repo)
+    :ok = Sandbox.checkout(Ticketsystem.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Ticketsystem.Repo, {:shared, self()})
+      Sandbox.mode(Ticketsystem.Repo, {:shared, self()})
     end
 
     :ok

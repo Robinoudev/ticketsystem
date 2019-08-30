@@ -31,12 +31,13 @@ defmodule TicketsystemWeb.Resolvers.CompaniesMutationTest do
         }
       }
 
-      {:ok, %{data: %{"companyMutation" => result}}} = Absinthe.run(
-        ctx.company_mutation,
-        Schema,
-        context: context_for(ctx.user),
-        variables: variables
-      )
+      {:ok, %{data: %{"companyMutation" => result}}} =
+        Absinthe.run(
+          ctx.company_mutation,
+          Schema,
+          context: context_for(ctx.user),
+          variables: variables
+        )
 
       new_company = Enum.at(Companies.list_companies(), -1)
 
@@ -52,12 +53,13 @@ defmodule TicketsystemWeb.Resolvers.CompaniesMutationTest do
         }
       }
 
-      {:ok, %{data: %{"companyMutation" => result}}} = Absinthe.run(
-        ctx.company_mutation,
-        Schema,
-        context: context_for(ctx.user),
-        variables: variables
-      )
+      {:ok, %{data: %{"companyMutation" => result}}} =
+        Absinthe.run(
+          ctx.company_mutation,
+          Schema,
+          context: context_for(ctx.user),
+          variables: variables
+        )
 
       companies = Companies.list_companies()
 
@@ -76,12 +78,13 @@ defmodule TicketsystemWeb.Resolvers.CompaniesMutationTest do
         }
       }
 
-      {:ok, %{data: %{"companyMutation" => result}}} = Absinthe.run(
-        ctx.company_mutation,
-        Schema,
-        context: context_for(ctx.user),
-        variables: variables
-      )
+      {:ok, %{data: %{"companyMutation" => result}}} =
+        Absinthe.run(
+          ctx.company_mutation,
+          Schema,
+          context: context_for(ctx.user),
+          variables: variables
+        )
 
       companies = Companies.list_companies()
 
@@ -101,12 +104,13 @@ defmodule TicketsystemWeb.Resolvers.CompaniesMutationTest do
         }
       }
 
-      {:ok, %{data: %{"companyMutation" => result}}} = Absinthe.run(
-        ctx.company_mutation,
-        Schema,
-        context: context_for(ctx.user),
-        variables: variables
-      )
+      {:ok, %{data: %{"companyMutation" => result}}} =
+        Absinthe.run(
+          ctx.company_mutation,
+          Schema,
+          context: context_for(ctx.user),
+          variables: variables
+        )
 
       companies = Companies.list_companies()
 
@@ -123,17 +127,18 @@ defmodule TicketsystemWeb.Resolvers.CompaniesMutationTest do
         }
       }
 
-      {:ok, %{data: %{"companyMutation" => result}}} = Absinthe.run(
-        ctx.company_mutation,
-        Schema,
-        context: context_for(ctx.user),
-        variables: variables
-      )
+      {:ok, %{data: %{"companyMutation" => result}}} =
+        Absinthe.run(
+          ctx.company_mutation,
+          Schema,
+          context: context_for(ctx.user),
+          variables: variables
+        )
 
       companies = Companies.list_companies()
 
       assert result["messages"] == [%{"field" => "id", "message" => "does not exist"}]
-      assert length(companies) == 0
+      assert Enum.empty?(companies)
     end
   end
 end
