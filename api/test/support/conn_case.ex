@@ -20,6 +20,8 @@ defmodule TicketsystemWeb.ConnCase do
       # Import conveniences for testing with connections
       use Phoenix.ConnTest
       alias TicketsystemWeb.Router.Helpers, as: Routes
+      alias TicketsystemWeb.Schema
+      import Ticketsystem.Factory
 
       # The default endpoint for testing
       @endpoint TicketsystemWeb.Endpoint

@@ -1,12 +1,9 @@
 defmodule TicketsystemWeb.Resolvers.AccountsQueryTest do
   use TicketsystemWeb.ConnCase, async: true
   use Plug.Test
-  import Ticketsystem.Factory
-  alias TicketsystemWeb.Schema
+  import Ticketsystem.AbsintheHelpers
 
   describe "Accounts resolver queries" do
-    @unauthorized_context %{}
-
     setup do
       %{
         user: insert(:user),
@@ -14,6 +11,7 @@ defmodule TicketsystemWeb.Resolvers.AccountsQueryTest do
           query Users {
             usersQuery {
               messages {
+                field
                 message
               }
               result {
@@ -25,40 +23,23 @@ defmodule TicketsystemWeb.Resolvers.AccountsQueryTest do
       }
     end
 
-    test "Returns unauthorized not logged in", context do
-      {:ok, result} = Absinthe.run(
-        context.users_query,
-        Schema,
-        context: @unauthorized_context
+    test "Returns unauthorized when not logged in", ctx do
+      {:ok, %{data: %{"usersQuery" => result}}} = Absinthe.run(
+        ctx.users_query,
+        Schema
       )
 
-      assert result.data["usersQuery"] == nil
-      assert Enum.at(result.errors, 0).message == "Access denied"
+      assert result["messages"] == [%{"field" => "authorization", "message" => "not authorized to access this resource"}]
     end
 
-    test "Returns users when a valid context is provided", context do
-      req_headers =
-        TicketsystemWeb.Resolvers.Accounts.login(
-          %{},
-          %{user: %{email: context.user.email, password: "password"}},
-          %{}
-        )
-        |> elem(1)
-
-      conn =
-        build_conn()
-        |> put_req_header("authorization", "Bearer #{req_headers.token}")
-        |> Ticketsystem.Context.call({})
-
-      absinthe = conn.private[:absinthe]
-
-      {:ok, result} = Absinthe.run(
-        context.users_query,
+    test "Returns users when a valid context is provided", ctx do
+      {:ok, %{data: %{"usersQuery" => result}}} = Absinthe.run(
+        ctx.users_query,
         Schema,
-        context: absinthe.context
+        context: context_for(ctx.user)
       )
 
-      assert result.data["usersQuery"]["result"] == [%{ "email" => context.user.email,}]
+      assert result["result"] == [%{ "email" => ctx.user.email,}]
     end
   end
 end

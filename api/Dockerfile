@@ -1,5 +1,7 @@
 FROM bitwalker/alpine-elixir-phoenix:latest
 
+RUN apk --no-cache --update add postgresql-client
+
 WORKDIR /app/user
 
 COPY . .

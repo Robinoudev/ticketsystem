@@ -65,7 +65,10 @@ defmodule Ticketsystem.MixProject do
       {:bcrypt_elixir, "~> 2.0.3"},
       {:ex_doc, "~> 0.19", only: :dev, runtime: false},
       {:absinthe_error_payload, "~> 1.0"},
-      {:faker, "~> 0.12", only: :test}
+      {:faker, "~> 0.12", only: :test},
+      {:dataloader, "~> 1.0.0"},
+      {:mix_test_watch, "~> 0.9.0", only: :dev, runtime: false},
+      {:credo, "~> 1.1.0", only: [:dev, :test], runtime: false}
     ]
   end
 
@@ -80,6 +83,8 @@ defmodule Ticketsystem.MixProject do
       "ecto.seed": ["run priv/repo/seeds.exs"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
+      "ecto.migrate": ["ecto.migrate", "ecto.dump"],
+      "ecto.rollback": ["ecto.rollback", "ecto.dump"],
       test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
