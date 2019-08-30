@@ -160,12 +160,12 @@ CREATE UNIQUE INDEX users_username_index ON public.users USING btree (username);
 --
 
 ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_company_id_fkey FOREIGN KEY (company_id) REFERENCES public.companies(id);
+    ADD CONSTRAINT users_company_id_fkey FOREIGN KEY (company_id) REFERENCES public.companies(id) ON DELETE CASCADE;
 
 
 --
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO public."schema_migrations" (version) VALUES (20190705141012), (20190706131407), (20190706133556), (20190706134339), (20190815190807), (20190819111957), (20190820090950);
+INSERT INTO public."schema_migrations" (version) VALUES (20190705141012), (20190706131407), (20190706133556), (20190706134339), (20190815190807), (20190819111957), (20190820090950), (20190830172345), (20190830172538);
 
