@@ -27,7 +27,6 @@ defmodule Ticketsystem.AuthHelperTest do
     end
 
     test "login_with_email_pass/2 returns User not found when email is wrong" do
-
       assert AuthHelper.login_with_email_pass("invalid@email.com", "password") ==
                {:error, "no user with given email"}
     end

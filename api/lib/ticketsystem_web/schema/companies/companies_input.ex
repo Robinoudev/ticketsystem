@@ -1,4 +1,7 @@
 defmodule TicketsystemWeb.Schema.CompaniesInput do
+  @moduledoc """
+  Definition of mutation inputs for Companies context
+  """
   use Absinthe.Schema.Notation
   import AbsintheErrorPayload.Payload
 
@@ -17,9 +20,9 @@ defmodule TicketsystemWeb.Schema.CompaniesInput do
 
   object :company_mutation do
     field :company_mutation, type: :company_payload, description: "Create a company" do
-      arg :company, :company_mutation_params
-      resolve &CompaniesResolver.mutate_company/3
-      middleware &build_payload/2
+      arg(:company, :company_mutation_params)
+      resolve(&CompaniesResolver.mutate_company/3)
+      middleware(&build_payload/2)
     end
   end
 end

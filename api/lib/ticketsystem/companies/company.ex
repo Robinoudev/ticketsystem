@@ -1,4 +1,7 @@
 defmodule Ticketsystem.Companies.Company do
+  @moduledoc """
+  Company model
+  """
   use Ecto.Schema
   import Ecto.Changeset
 

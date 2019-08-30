@@ -31,29 +31,36 @@ defmodule TicketsystemWeb.Resolvers.CompaniesQueryTest do
     end
 
     test "Returns unauthorized when not logged in", ctx do
-      {:ok, %{data: %{"companiesQuery" => result}}} = Absinthe.run(
-        ctx.companies_query,
-        Schema
-      )
+      {:ok, %{data: %{"companiesQuery" => result}}} =
+        Absinthe.run(
+          ctx.companies_query,
+          Schema
+        )
 
-      assert result["messages"] == [%{"field" => "authorization", "message" => "not authorized to access this resource"}]
+      assert result["messages"] == [
+               %{
+                 "field" => "authorization",
+                 "message" => "not authorized to access this resource"
+               }
+             ]
     end
 
     test "Returns companies when a valid context is provided", ctx do
-      {:ok, %{data: %{"companiesQuery" => result}}} = Absinthe.run(
-        ctx.companies_query,
-        Schema,
-        context: context_for(ctx.user)
-      )
+      {:ok, %{data: %{"companiesQuery" => result}}} =
+        Absinthe.run(
+          ctx.companies_query,
+          Schema,
+          context: context_for(ctx.user)
+        )
 
       assert result["result"] == [
-        %{
-          "name" => ctx.company.name,
-          # "id" => "#{ctx.company.id}",
-          "id" => to_string(ctx.company.id),
-          "users" => []
-        }
-      ]
+               %{
+                 "name" => ctx.company.name,
+                 # "id" => "#{ctx.company.id}",
+                 "id" => to_string(ctx.company.id),
+                 "users" => []
+               }
+             ]
     end
   end
 end

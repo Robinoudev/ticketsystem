@@ -23,7 +23,8 @@ before_script:
 
 script:
   - mix ecto.reset
-  - mix format
+  - mix format --check-formatted
+  - mix credo --strict
   - mix coveralls.travis
 
 services:

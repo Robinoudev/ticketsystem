@@ -1,7 +1,10 @@
 defmodule TicketsystemWeb.Data do
+  @moduledoc """
+  Implementation for GraphQL dataloader to support relation query batching
+  """
   import Ecto.Query
 
-  def data() do
+  def data do
     Dataloader.Ecto.new(Ticketsystem.Repo, query: &query/2)
   end
 

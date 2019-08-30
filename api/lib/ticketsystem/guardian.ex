@@ -1,4 +1,7 @@
 defmodule Ticketsystem.Guardian do
+  @moduledoc """
+  Guardian implementation
+  """
   use Guardian, otp_app: :ticketsystem
   alias Ticketsystem.Accounts
 
