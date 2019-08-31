@@ -26,7 +26,7 @@ SET default_with_oids = false;
 
 CREATE TABLE public.companies (
     id bigint NOT NULL,
-    name character varying(255),
+    name character varying(255) NOT NULL,
     inserted_at timestamp(0) without time zone NOT NULL,
     updated_at timestamp(0) without time zone NOT NULL
 );
@@ -67,13 +67,13 @@ CREATE TABLE public.schema_migrations (
 
 CREATE TABLE public.users (
     id bigint NOT NULL,
-    name character varying(255),
-    username character varying(255),
-    email character varying(255),
+    name character varying(255) NOT NULL,
+    username character varying(255) NOT NULL,
+    email character varying(255) NOT NULL,
     inserted_at timestamp(0) without time zone NOT NULL,
     updated_at timestamp(0) without time zone NOT NULL,
-    password_hash character varying(255),
-    company_id bigint
+    password_hash character varying(255) NOT NULL,
+    company_id bigint NOT NULL
 );
 
 
@@ -160,12 +160,12 @@ CREATE UNIQUE INDEX users_username_index ON public.users USING btree (username);
 --
 
 ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_company_id_fkey FOREIGN KEY (company_id) REFERENCES public.companies(id);
+    ADD CONSTRAINT users_company_id_fkey FOREIGN KEY (company_id) REFERENCES public.companies(id) ON DELETE CASCADE;
 
 
 --
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO public."schema_migrations" (version) VALUES (20190705141012), (20190706131407), (20190706133556), (20190706134339), (20190815190807), (20190819111957), (20190820090950);
+INSERT INTO public."schema_migrations" (version) VALUES (20190705141012), (20190706131407), (20190706133556), (20190706134339), (20190815190807), (20190819111957), (20190820090950), (20190830172345), (20190830172538), (20190831075055), (20190831084357);
 

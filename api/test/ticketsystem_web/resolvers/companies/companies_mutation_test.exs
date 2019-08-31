@@ -7,7 +7,7 @@ defmodule TicketsystemWeb.Resolvers.CompaniesMutationTest do
   describe "Companies resolver mutations" do
     setup do
       %{
-        user: insert(:user),
+        user: insert(:user_with_company),
         company_mutation: """
         mutation CompanyMutation ($company: CompanyMutationParams!) {
           companyMutation (company: $company) {
@@ -64,7 +64,7 @@ defmodule TicketsystemWeb.Resolvers.CompaniesMutationTest do
       companies = Companies.list_companies()
 
       assert result["messages"] == [%{"field" => "name", "message" => "has already been taken"}]
-      assert length(companies) == 1
+      assert length(companies) == 2
       assert List.last(companies) == company
     end
 
@@ -89,18 +89,17 @@ defmodule TicketsystemWeb.Resolvers.CompaniesMutationTest do
       companies = Companies.list_companies()
 
       assert result["result"]["name"] == "updated name"
-      assert length(companies) == 1
-      assert List.first(companies).name == "updated name"
+      assert length(companies) == 2
+      assert List.last(companies).name == "updated name"
     end
 
     test "should validate uniqueness of name when updating with a valid company_id", ctx do
       company = insert(:company)
-      second_company = insert(:company)
 
       variables = %{
         "company" => %{
-          "id" => company.id,
-          "name" => second_company.name
+          "id" => ctx.user.company.id,
+          "name" => company.name
         }
       }
 
@@ -116,7 +115,7 @@ defmodule TicketsystemWeb.Resolvers.CompaniesMutationTest do
 
       assert result["messages"] == [%{"field" => "name", "message" => "has already been taken"}]
       assert length(companies) == 2
-      assert List.last(companies).name == second_company.name
+      assert List.first(companies).name != company.name
     end
 
     test "should throw company not found error when id doesn't exist", ctx do
@@ -138,7 +137,7 @@ defmodule TicketsystemWeb.Resolvers.CompaniesMutationTest do
       companies = Companies.list_companies()
 
       assert result["messages"] == [%{"field" => "id", "message" => "does not exist"}]
-      assert Enum.empty?(companies)
+      assert length(companies) == 1
     end
   end
 end

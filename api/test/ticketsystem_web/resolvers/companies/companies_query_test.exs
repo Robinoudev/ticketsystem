@@ -6,7 +6,7 @@ defmodule TicketsystemWeb.Resolvers.CompaniesQueryTest do
   describe "Companies resolver queries" do
     setup do
       %{
-        user: insert(:user),
+        user: insert(:user_with_company),
         company: insert(:company),
         companies_query: """
           query Companies {
@@ -55,8 +55,18 @@ defmodule TicketsystemWeb.Resolvers.CompaniesQueryTest do
 
       assert result["result"] == [
                %{
+                 "name" => ctx.user.company.name,
+                 "id" => to_string(ctx.user.company.id),
+                 "users" => [
+                   %{
+                     "email" => ctx.user.email,
+                     "name" => ctx.user.name,
+                     "id" => to_string(ctx.user.id)
+                   }
+                 ]
+               },
+               %{
                  "name" => ctx.company.name,
-                 # "id" => "#{ctx.company.id}",
                  "id" => to_string(ctx.company.id),
                  "users" => []
                }

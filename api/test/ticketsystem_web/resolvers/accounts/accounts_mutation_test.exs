@@ -1,12 +1,13 @@
 defmodule TicketsystemWeb.Resolvers.AccountsMutationTest do
   use TicketsystemWeb.ConnCase, async: true
   use Plug.Test
+  alias Ticketsystem.Accounts
   alias TicketsystemWeb.Schema
 
   describe "Accounts resolver mutations" do
     setup do
       %{
-        user: insert(:user),
+        user: insert(:user_with_company),
         login_mutation: """
           mutation Login ($user: LoginParams) {
             loginMutation (user: $user) {
@@ -45,7 +46,7 @@ defmodule TicketsystemWeb.Resolvers.AccountsMutationTest do
       {:ok, result} =
         Absinthe.run(
           context.login_mutation,
-          TicketsystemWeb.Schema,
+          Schema,
           context: %{},
           variables: %{"user" => %{"email" => context.user.email, "password" => "password"}}
         )
@@ -107,7 +108,8 @@ defmodule TicketsystemWeb.Resolvers.AccountsMutationTest do
           context: %{}
         )
 
-      new_user = Enum.at(Ticketsystem.Accounts.list_users(), -1)
+      users = Accounts.list_users()
+      new_user = List.last(users)
 
       assert result["result"] ==
                %{
@@ -117,7 +119,7 @@ defmodule TicketsystemWeb.Resolvers.AccountsMutationTest do
                  "companyId" => "#{company.id}"
                }
 
-      assert Ticketsystem.Accounts.list_users() == [context.user, new_user]
+      assert length(users) == 2
     end
 
     test "Validates uniqueness of username", context do
@@ -146,7 +148,8 @@ defmodule TicketsystemWeb.Resolvers.AccountsMutationTest do
                }
              ]
 
-      assert Ticketsystem.Accounts.list_users() == [context.user]
+      users = Accounts.list_users()
+      assert length(users) == 1
     end
 
     test "Validates uniqueness of email", context do
@@ -175,7 +178,8 @@ defmodule TicketsystemWeb.Resolvers.AccountsMutationTest do
                }
              ]
 
-      assert Ticketsystem.Accounts.list_users() == [context.user]
+      users = Accounts.list_users()
+      assert length(users) == 1
     end
   end
 end
