@@ -6,7 +6,7 @@ defmodule TicketsystemWeb.Resolvers.AccountsQueryTest do
   describe "Accounts resolver queries" do
     setup do
       %{
-        user: insert(:user),
+        user: insert(:user_with_company),
         users_query: """
           query Users {
             usersQuery {
