@@ -12,10 +12,12 @@ defmodule TicketsystemWeb.Schema do
   import_types(TicketsystemWeb.Schema.AccountsInputs)
   import_types(TicketsystemWeb.Schema.CompaniesType)
   import_types(TicketsystemWeb.Schema.CompaniesInput)
+  import_types(TicketsystemWeb.Schema.TicketsType)
 
   query do
     import_fields(:users_query)
     import_fields(:companies_query)
+    import_fields(:tickets_query)
   end
 
   mutation do

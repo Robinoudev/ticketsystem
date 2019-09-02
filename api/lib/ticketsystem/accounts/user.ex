@@ -6,6 +6,7 @@ defmodule Ticketsystem.Accounts.User do
   import Ecto.Changeset
 
   alias Ticketsystem.Companies.Company
+  alias Ticketsystem.Tickets.Ticket
 
   schema "users" do
     field :email, :string
@@ -13,6 +14,9 @@ defmodule Ticketsystem.Accounts.User do
     field :password_hash, :string
     field :username, :string
     field :password, :string, virtual: true
+
+    has_many :issued_tickets, Ticket, foreign_key: :issuer_id
+    has_many :handled_tickets, Ticket, foreign_key: :handler_id
     belongs_to :company, Company
 
     timestamps()
