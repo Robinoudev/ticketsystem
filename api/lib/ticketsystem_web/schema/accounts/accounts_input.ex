@@ -1,4 +1,4 @@
-defmodule TicketsystemWeb.Schema.AccountsInputs do
+defmodule TicketsystemWeb.Schema.AccountsInput do
   @moduledoc """
   Definition of mutation inputs for Accounts context
   """

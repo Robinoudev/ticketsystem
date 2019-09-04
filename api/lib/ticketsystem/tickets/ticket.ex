@@ -32,5 +32,11 @@ defmodule Ticketsystem.Tickets.Ticket do
       :handler_id
     ])
     |> validate_required([:title, :description, :issuer_id])
+    |> unique_constraint(:title, name: :tickets_title_index)
+    |> foreign_key_constraint(:issuer_id, name: :users_issuer_id_fkey)
+    |> foreign_key_constraint(:handler_id, name: :users_handler_id_fkey)
+    |> validate_length(:description, min: 4)
+    |> validate_inclusion(:status, ["draft", "submitted", "in_progress", "handled"])
+    |> validate_inclusion(:priority, ["low", "normal", "high"])
   end
 end

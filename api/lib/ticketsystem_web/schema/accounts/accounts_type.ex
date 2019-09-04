@@ -1,4 +1,4 @@
-defmodule TicketsystemWeb.Schema.AccountsTypes do
+defmodule TicketsystemWeb.Schema.AccountsType do
   @moduledoc """
   Definition of query fields for Accounts context
   """
