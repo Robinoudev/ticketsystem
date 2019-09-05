@@ -1,11 +1,13 @@
 defmodule Ticketsystem.TicketFactory do
   @moduledoc false
+  alias Faker.Lorem.Shakespeare
+
   defmacro __using__(_opts) do
     quote do
       def ticket_factory do
         %Ticketsystem.Tickets.Ticket{
-          title: Faker.Lorem.Shakespeare.hamlet(),
-          description: Faker.Lorem.Shakespeare.hamlet()
+          title: Shakespeare.hamlet(),
+          description: Shakespeare.hamlet()
         }
       end
     end

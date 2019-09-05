@@ -12,8 +12,6 @@ defmodule Ticketsystem.Tickets do
     Repo.all(Ticket)
   end
 
-  def get_ticket!(id), do: Repo.get!(Ticket, id)
-
   def insert_or_update_ticket(attrs \\ {}, current_user) do
     ticket =
       case Map.fetch(attrs, :id) do

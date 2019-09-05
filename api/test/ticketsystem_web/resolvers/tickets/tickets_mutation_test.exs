@@ -1,9 +1,11 @@
 defmodule TicketsystemWeb.Resolvers.TicketsMutationTest do
   use TicketsystemWeb.ConnCase, async: true
   use Plug.Test
+
   import Ticketsystem.AbsintheHelpers
-  alias Ticketsystem.Tickets
+
   alias Ticketsystem.Repo
+  alias Ticketsystem.Tickets
 
   @ticket_mutation """
   mutation CreateTicket ($ticket: TicketMutationParams) {
@@ -29,7 +31,7 @@ defmodule TicketsystemWeb.Resolvers.TicketsMutationTest do
       }
     end
 
-    test "should create a ticket with valid attrs and context", ctx do
+    test "should create a ticket with valid attrs and context and set default values", ctx do
       variables = %{
         "ticket" => %{
           "title" => "valid title",
@@ -74,6 +76,8 @@ defmodule TicketsystemWeb.Resolvers.TicketsMutationTest do
       assert List.last(tickets).title == "updated title"
       assert List.last(tickets).description == "updated description"
       assert result["result"]["title"] == "updated title"
+      assert result["result"]["status"] == "draft"
+      assert result["result"]["priority"] == "low"
       assert result["result"]["id"] == "#{ticket.id}"
     end
 
@@ -102,8 +106,34 @@ defmodule TicketsystemWeb.Resolvers.TicketsMutationTest do
              ]
     end
 
-    test "should set default values for status and priority", ctx do
+    test "validates inclusion of status and priority", ctx do
+      variables = %{
+        "ticket" => %{
+          "title" => "title",
+          "description" => "desc",
+          "priority" => "not valid",
+          "status" => "not valid"
+        }
+      }
 
+      {:ok, %{data: %{"ticketMutation" => result}}} =
+        Absinthe.run(
+          @ticket_mutation,
+          Schema,
+          context: context_for(ctx.user),
+          variables: variables
+        )
+
+      assert result["messages"] == [
+               %{
+                 "field" => "priority",
+                 "message" => "is invalid"
+               },
+               %{
+                 "field" => "status",
+                 "message" => "is invalid"
+               }
+             ]
     end
   end
 end

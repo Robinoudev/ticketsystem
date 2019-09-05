@@ -20,7 +20,8 @@ defmodule TicketsystemWeb.Schema.TicketsInput do
     field :id, :id, description: "ID"
     field :title, non_null(:string), description: "Required title"
     field :description, non_null(:string), description: "Required description"
-    field :status, :string, description: "Required description"
+    field :status, :string, description: "Status of ticket"
+    field :priority, :string, description: "Priority of ticket"
   end
 
   payload_object(:ticket_payload, :ticket_input)
