@@ -16,7 +16,6 @@ defmodule TicketsystemWeb.Schema.TicketsInput do
     field :issuer_id, :id
   end
 
-
   input_object :ticket_mutation_params, description: "Create or edit a ticket" do
     field :id, :id, description: "ID"
     field :title, non_null(:string), description: "Required title"
