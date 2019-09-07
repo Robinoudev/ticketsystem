@@ -1,4 +1,4 @@
-defmodule TicketsystemWeb.Schema.AccountsTypes do
+defmodule TicketsystemWeb.Schema.AccountsType do
   @moduledoc """
   Definition of query fields for Accounts context
   """
@@ -15,6 +15,8 @@ defmodule TicketsystemWeb.Schema.AccountsTypes do
     field :username, :string
     field :email, :string
     field :company, :company_type, resolve: dataloader(Data)
+    field :issued_tickets, list_of(:ticket_type), resolve: dataloader(Data)
+    field :handled_tickets, list_of(:ticket_type), resolve: dataloader(Data)
   end
 
   payload_object(:users_query_payload, list_of(:user_type))
