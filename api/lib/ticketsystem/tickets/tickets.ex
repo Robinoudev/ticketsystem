@@ -3,8 +3,10 @@ defmodule Ticketsystem.Tickets do
   The Tickets context.
   """
 
+  import Canada
   import Ecto.Query, warn: false
   alias Ticketsystem.Repo
+  alias AbsintheErrorPayload.ValidationMessage
 
   alias Ticketsystem.Tickets.Ticket
 
@@ -15,13 +17,26 @@ defmodule Ticketsystem.Tickets do
   def insert_or_update_ticket(attrs \\ {}, current_user) do
     ticket =
       case Map.fetch(attrs, :id) do
-        {:ok, _value} -> Repo.get(Ticket, attrs.id)
+        {:ok, _value} -> Repo.get(Ticket, attrs.id) |> allow?(current_user)
         :error -> %Ticket{issuer_id: current_user.id}
       end
 
     case ticket do
-      nil -> nil
+      {:error, %ValidationMessage{} = message} -> {:error, message}
       _ -> ticket |> Ticket.changeset(attrs) |> Repo.insert_or_update()
+    end
+  end
+
+  defp allow?(ticket, user) do
+    cond do
+      ticket && user |> can?(update(ticket)) ->
+        ticket
+      ticket ->
+        {:error, %ValidationMessage{field: :authorization, code: "denied", message: "not authorized to access this resource"}}
+      user ->
+        {:error, %ValidationMessage{field: :id, code: "id", message: "resource not found"}}
+      true ->
+        {:error, %ValidationMessage{field: :unknown, code: "unknown", message: "unknown server error"}}
     end
   end
 end

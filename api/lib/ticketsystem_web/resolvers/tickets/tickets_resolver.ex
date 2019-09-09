@@ -22,8 +22,8 @@ defmodule TicketsystemWeb.Resolvers.Tickets do
     result =
       case Tickets.insert_or_update_ticket(args.ticket, current_user) do
         {:error, %Ecto.Changeset{} = changeset} -> {:ok, changeset}
+        {:error, %ValidationMessage{} = message} -> {:ok, message}
         {:ok, ticket} -> {:ok, ticket}
-        nil -> {:ok, %ValidationMessage{field: :id, code: "not found", message: "does not exist"}}
       end
 
     result
