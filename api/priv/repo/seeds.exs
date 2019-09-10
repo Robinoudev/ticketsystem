@@ -24,26 +24,28 @@ User |> Repo.delete_all()
 Company |> Repo.delete_all()
 
 # Companies
-{:ok, company1} = Companies.insert_or_update_company(%{name: "company1"})
-{:ok, company2} = Companies.insert_or_update_company(%{name: "company2"})
+company1 = Repo.insert!(%Company{name: "company1"})
+company2 = Repo.insert!(%Company{name: "company2"})
 
 # Users
-{:ok, user1} =
-  Accounts.create_user(%{
-    email: "email1@email.com",
+user1 =
+  Repo.insert!(%User{
+    email: "superadmin@email.com",
     name: "name1",
     username: "username1",
-    password: "password",
-    company_id: company1.id
+    password_hash: Bcrypt.hash_pwd_salt("password"),
+    company_id: company1.id,
+    roles: [:superadmin]
   })
 
-{:ok, user2} =
-  Accounts.create_user(%{
-    email: "email2@email.com",
+user2 =
+  Repo.insert!(%User{
+    email: "superadmin@email.com",
     name: "name2",
     username: "username2",
-    password: "password",
-    company_id: company2.id
+    password_hash: Bcrypt.hash_pwd_salt("password"),
+    company_id: company2.id,
+    roles: [:handler]
   })
 
 # Issued Tickets
@@ -53,12 +55,4 @@ Tickets.insert_or_update_ticket(
     description: "Description"
   },
   user1
-)
-
-Tickets.insert_or_update_ticket(
-  %{
-    title: "Second ticket",
-    description: "Description"
-  },
-  user2
 )

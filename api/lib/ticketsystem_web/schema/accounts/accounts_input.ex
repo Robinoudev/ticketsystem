@@ -7,6 +7,7 @@ defmodule TicketsystemWeb.Schema.AccountsInput do
 
   alias TicketsystemWeb.Resolvers.Accounts, as: AccountsResolver
 
+
   object :user_input, description: "User input" do
     field :id, :id
     field :name, :string
@@ -32,7 +33,7 @@ defmodule TicketsystemWeb.Schema.AccountsInput do
   object :user_mutation do
     field :user_mutation, type: :user_payload, description: "Create a new user" do
       arg(:user, :user_mutation_params)
-      resolve(&AccountsResolver.create_user/3)
+      resolve(&AccountsResolver.insert_or_update_user/3)
       middleware(&build_payload/2)
     end
   end
