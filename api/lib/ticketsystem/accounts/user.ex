@@ -14,6 +14,7 @@ defmodule Ticketsystem.Accounts.User do
     field :password_hash, :string
     field :username, :string
     field :password, :string, virtual: true
+    field :roles, {:array, RoleEnum}
 
     has_many :issued_tickets, Ticket, foreign_key: :issuer_id
     has_many :handled_tickets, Ticket, foreign_key: :handler_id
@@ -25,7 +26,7 @@ defmodule Ticketsystem.Accounts.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:name, :username, :email, :password, :company_id])
+    |> cast(attrs, [:name, :username, :email, :password, :company_id, :roles])
     |> validate_required([:name, :username, :email, :password, :company_id])
     |> validate_format(:email, ~r/@/)
     |> validate_length(:password, min: 8)

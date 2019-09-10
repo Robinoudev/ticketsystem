@@ -70,6 +70,7 @@ defmodule Ticketsystem.MixProject do
       {:mix_test_watch, "~> 0.9.0", only: :dev, runtime: false},
       {:credo, "~> 1.1.0", only: [:dev, :test], runtime: false},
       {:canada, "~> 2.0"},
+      {:ecto_enum, "~> 1.3"}
     ]
   end
 

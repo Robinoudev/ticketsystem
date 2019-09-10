@@ -15,6 +15,7 @@ defmodule TicketsystemWeb.Schema.AccountsInput do
     field :company_id, :id
     field :password_hash, :string
     field :token, :string
+    field :roles, list_of(:role)
   end
 
   input_object :user_mutation_params, description: "Create a user" do
@@ -23,6 +24,7 @@ defmodule TicketsystemWeb.Schema.AccountsInput do
     field :email, non_null(:string), description: "Required email"
     field :password, non_null(:string), description: "Required password"
     field :company_id, non_null(:id), description: "Required company id"
+    field :roles, list_of(:role), description: "User roles"
   end
 
   payload_object(:user_payload, :user_input)
