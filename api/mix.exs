@@ -5,7 +5,7 @@ defmodule Ticketsystem.MixProject do
     [
       app: :ticketsystem,
       version: "0.1.0",
-      elixir: "~> 1.9.1",
+      elixir: "~> 1.9",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,

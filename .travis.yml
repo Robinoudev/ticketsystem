@@ -9,7 +9,7 @@ matrix:
       elixir:
         - '1.9'
       otp_release:
-        - '22.0.4'
+        - '22.0.7'
       env:
         - MIX_ENV=test
       before_install:
