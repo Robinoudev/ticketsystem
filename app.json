@@ -1,0 +1,31 @@
+{
+  "name": "ticketsystem",
+  "scripts": {
+    "postdeploy": "mix ecto.migrate && bin/seed"
+  },
+  "env": {
+    "APP_BASE": {
+      "required": true,
+      "value": "api"
+    },
+    "HEROKU_APP_NAME": {
+      "required": true
+    },
+    "MIX_ENV": {
+      "required": true,
+      "value": "heroku"
+    }
+  },
+  "formation": {},
+  "addons": [
+    "heroku-postgresql"
+  ],
+  "buildpacks": [
+    {
+      "url": "https://github.com/HashNuke/heroku-buildpack-elixir"
+    },
+    {
+      "url": "https://github.com/lstoll/heroku-buildpack-monorepo"
+    }
+  ]
+}
