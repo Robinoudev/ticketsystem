@@ -1,0 +1,30 @@
+{
+  "addons": [
+    "heroku-postgresql"
+  ],
+  "buildpacks": [
+    {
+      "url": "https://github.com/lstoll/heroku-buildpack-monorepo"
+    },
+    {
+      "url": "https://github.com/HashNuke/heroku-buildpack-elixir.git"
+    }
+  ],
+  "env": {
+    "APP_BASE": {
+      "required": true
+    },
+    "HEROKU_APP_NAME": {
+      "required": true
+    },
+    "MIX_ENV": {
+      "required": true
+    }
+  },
+  "formation": {
+  },
+  "name": "ticketsystem",
+  "scripts": {
+  },
+  "stack": "heroku-18"
+}
