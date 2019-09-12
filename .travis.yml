@@ -1,31 +1,36 @@
-language: elixir
-elixir:
-  - '1.9'
-otp_release:
-  - '22.0.4'
+cache:
+  directories:
+    - /api/deps/
 
-env:
-  - MIX_ENV=test
+matrix:
+  include:
+    -
+      language: elixir
+      elixir:
+        - '1.9'
+      otp_release:
+        - '22.0.7'
+      env:
+        - MIX_ENV=test
+      before_install:
+        - sudo apt-get update
+        - sudo apt-get --yes remove postgresql\*
+        - sudo apt-get install -y postgresql-11 postgresql-client-11
+        - sudo cp /etc/postgresql/{9.6,11}/main/pg_hba.conf
+        - sudo service postgresql restart 11
+        - cd api
+      before_script:
+        - psql --version
+        - psql -c 'CREATE DATABASE travis_test_db' -U postgres
+        - psql -c 'CREATE ROLE travis SUPERUSER LOGIN CREATEDB;' -U postgres
+        - cp config/test.travis.exs config/test.exs
 
-before_install:
-  - sudo apt-get update
-  - sudo apt-get --yes remove postgresql\*
-  - sudo apt-get install -y postgresql-11 postgresql-client-11
-  - sudo cp /etc/postgresql/{9.6,11}/main/pg_hba.conf
-  - sudo service postgresql restart 11
-  - cd api
+      script:
+        - mix ecto.reset
+        - mix format --check-formatted
+        - mix credo --strict
+        - mix coveralls.travis
 
-before_script:
-  - psql --version
-  - psql -c 'CREATE DATABASE travis_test_db' -U postgres
-  - psql -c 'CREATE ROLE travis SUPERUSER LOGIN CREATEDB;' -U postgres
-  - cp config/test.travis.exs config/test.exs
-
-script:
-  - mix ecto.reset
-  - mix format --check-formatted
-  - mix credo --strict
-  - mix coveralls.travis
 
 services:
   - postgresql
