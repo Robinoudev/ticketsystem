@@ -1,6 +1,6 @@
 cache:
   directories:
-    - /api/deps/
+    - api/deps/
 
 matrix:
   include:
@@ -25,15 +25,13 @@ matrix:
         - psql -c 'CREATE DATABASE travis_test_db' -U postgres
         - psql -c 'CREATE ROLE travis SUPERUSER LOGIN CREATEDB;' -U postgres
         - cp config/test.travis.exs config/test.exs
-
       script:
         - mix ecto.reset
         - mix format --check-formatted
         - mix credo --strict
         - mix coveralls.travis
-
       after_success:
-        - bash <(curl -s https://codecov.io/bash)>
+        - bash <(curl -s https://codecov.io/bash)
 
 
 services:
