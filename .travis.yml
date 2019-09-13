@@ -31,7 +31,7 @@ matrix:
         - mix credo --strict
         - mix coveralls.travis
       after_success:
-        - bash <(curl -s 'api/cover/' https://codecov.io/bash)
+        - bash <(curl -s https://codecov.io/bash) -f api/cover/excoveralls.html
 
 
 services:
