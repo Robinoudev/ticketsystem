@@ -12,6 +12,7 @@ matrix:
         - '22.0.7'
       env:
         - MIX_ENV=test
+        - CODECOV_TOKEN=a41b0bd5-811f-4b00-963c-ea765e5f5653
       before_install:
         - sudo apt-get update
         - sudo apt-get --yes remove postgresql\*
@@ -30,6 +31,9 @@ matrix:
         - mix format --check-formatted
         - mix credo --strict
         - mix coveralls.travis
+
+      after_success:
+        - codecov
 
 
 services:
