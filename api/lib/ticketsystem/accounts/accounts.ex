@@ -6,7 +6,9 @@ defmodule Ticketsystem.Accounts do
   import Canada
   import Ecto.Query, warn: false
   alias AbsintheErrorPayload.ValidationMessage
+  alias Ticketsystem.Allow
   alias Ticketsystem.Repo
+  require Ticketsystem.Allow
 
   alias Ticketsystem.Accounts.User
 
@@ -28,35 +30,13 @@ defmodule Ticketsystem.Accounts do
   def insert_or_update_user(attrs \\ %{}, current_user) do
     user =
       case Map.fetch(attrs, :id) do
-        {:ok, _value} -> Repo.get(User, attrs.id) |> allow?(current_user)
-        :error -> %User{}
+        {:ok, _value} -> Repo.get(User, attrs.id) |> Allow.authorize(:update, current_user)
+        :error -> %User{} |> Allow.authorize(:create, current_user)
       end
 
     case user do
       {:error, %ValidationMessage{} = message} -> {:error, message}
       _ -> user |> User.changeset(attrs) |> Repo.insert_or_update()
-    end
-  end
-
-  defp allow?(user, current_user) do
-    cond do
-      user && current_user |> can?(update(user)) ->
-        user
-
-      user ->
-        {:error,
-         %ValidationMessage{
-           field: :authorization,
-           code: "denied",
-           message: "not authorized to access this resource"
-         }}
-
-      current_user ->
-        {:error, %ValidationMessage{field: :id, code: "id", message: "resource not found"}}
-
-      true ->
-        {:error,
-         %ValidationMessage{field: :unknown, code: "unknown", message: "unknown server error"}}
     end
   end
 end

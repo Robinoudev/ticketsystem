@@ -49,13 +49,7 @@ defimpl Canada.Can, for: Ticketsystem.Accounts.User do
   Ability checks for actions on a Ticket struct
   """
   def can?(user, action, Ticket) when action in [:create, :update, :destroy] do
-    cond do
-      :superadmin in user.roles || :issuer in user.roles ->
-        true
-
-      true ->
-        false
-    end
+    if :superadmin in user.roles || :issuer in user.roles, do: true, else: false
   end
 
   def can?(user, action, object = %Ticket{}) when action in [:create, :update, :destroy] do
