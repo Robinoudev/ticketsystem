@@ -8,6 +8,6 @@ defmodule TicketsystemWeb.Schema.Enums do
     value(:superadmin)
     value(:admin)
     value(:handler)
-    value(:regular)
+    value(:issuer)
   end
 end

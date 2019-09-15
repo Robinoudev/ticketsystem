@@ -5,7 +5,7 @@ defimpl Canada.Can, for: Ticketsystem.Accounts.User do
   @doc """
   Ability checks for actions on a user struct
   """
-  def can?(user, action, object = User) when action in [:create, :update, :destroy] do
+  def can?(user, action, User) when action in [:create, :update, :destroy] do
     cond do
       :superadmin in user.roles ->
         true
@@ -47,6 +47,31 @@ defimpl Canada.Can, for: Ticketsystem.Accounts.User do
   @doc """
   Ability checks for actions on a Ticket struct
   """
+  def can?(user, action, Ticket) when action in [:create, :update, :destroy] do
+    cond do
+      :superadmin in user.roles ->
+        true
+
+      :issuer in user.roles ->
+        true
+
+      true ->
+        false
+    end
+  end
+
+  def can?(user, action, object = %Ticket{}) when action in [:create, :update, :destroy] do
+    cond do
+      :superadmin in user.roles ->
+        true
+
+      :issuer in user.roles && user.id == object.issuer_id ->
+        true
+
+      true ->
+        false
+    end
+  end
 
   # Inform of unimplemented ability check
   def can?(subject, action, resource) do

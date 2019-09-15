@@ -26,24 +26,54 @@ company1 = Repo.insert!(%Company{name: "company1"})
 company2 = Repo.insert!(%Company{name: "company2"})
 
 # Users
-user1 =
+superadmin =
   Repo.insert!(%User{
     email: "superadmin@email.com",
-    name: "name1",
-    username: "username1",
+    name: "superadmin",
+    username: "superadmin",
     password_hash: Bcrypt.hash_pwd_salt("password"),
     company_id: company1.id,
     roles: [:superadmin]
   })
 
-user2 =
+admin =
+  Repo.insert!(%User{
+    email: "admin@email.com",
+    name: "admin",
+    username: "admin",
+    password_hash: Bcrypt.hash_pwd_salt("password"),
+    company_id: company2.id,
+    roles: [:admin]
+  })
+
+handler =
   Repo.insert!(%User{
     email: "handler@email.com",
-    name: "name2",
-    username: "username2",
+    name: "handler",
+    username: "handler",
     password_hash: Bcrypt.hash_pwd_salt("password"),
     company_id: company2.id,
     roles: [:handler]
+  })
+
+issuer1 =
+  Repo.insert!(%User{
+    email: "issuer@email.com",
+    name: "issuer",
+    username: "issuer",
+    password_hash: Bcrypt.hash_pwd_salt("password"),
+    company_id: company2.id,
+    roles: [:issuer]
+  })
+
+issuer2 =
+  Repo.insert!(%User{
+    email: "issuer2@email.com",
+    name: "issuer2",
+    username: "issuer2",
+    password_hash: Bcrypt.hash_pwd_salt("password"),
+    company_id: company1.id,
+    roles: [:issuer]
   })
 
 # Issued Tickets
@@ -52,5 +82,13 @@ Tickets.insert_or_update_ticket(
     title: "First ticket",
     description: "Description"
   },
-  user1
+  issuer1
+)
+
+Tickets.insert_or_update_ticket(
+  %{
+    title: "Second ticket",
+    description: "Description"
+  },
+  issuer2
 )
