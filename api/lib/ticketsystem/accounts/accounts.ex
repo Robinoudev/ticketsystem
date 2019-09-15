@@ -5,8 +5,8 @@ defmodule Ticketsystem.Accounts do
 
   import Canada
   import Ecto.Query, warn: false
-  alias Ticketsystem.Repo
   alias AbsintheErrorPayload.ValidationMessage
+  alias Ticketsystem.Repo
 
   alias Ticketsystem.Accounts.User
 
@@ -42,12 +42,21 @@ defmodule Ticketsystem.Accounts do
     cond do
       user && current_user |> can?(update(user)) ->
         user
+
       user ->
-        {:error, %ValidationMessage{field: :authorization, code: "denied", message: "not authorized to access this resource"}}
+        {:error,
+         %ValidationMessage{
+           field: :authorization,
+           code: "denied",
+           message: "not authorized to access this resource"
+         }}
+
       current_user ->
         {:error, %ValidationMessage{field: :id, code: "id", message: "resource not found"}}
+
       true ->
-        {:error, %ValidationMessage{field: :unknown, code: "unknown", message: "unknown server error"}}
+        {:error,
+         %ValidationMessage{field: :unknown, code: "unknown", message: "unknown server error"}}
     end
   end
 end

@@ -10,10 +10,8 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-alias Ticketsystem.Accounts
 alias Ticketsystem.Accounts.User
 alias Ticketsystem.Companies.Company
-alias Ticketsystem.Companies
 alias Ticketsystem.Repo
 alias Ticketsystem.Tickets
 alias Ticketsystem.Tickets.Ticket
@@ -40,7 +38,7 @@ user1 =
 
 user2 =
   Repo.insert!(%User{
-    email: "superadmin@email.com",
+    email: "handler@email.com",
     name: "name2",
     username: "username2",
     password_hash: Bcrypt.hash_pwd_salt("password"),
