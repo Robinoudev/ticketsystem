@@ -1,5 +1,6 @@
 defimpl Canada.Can, for: Ticketsystem.Accounts.User do
   alias Ticketsystem.Accounts.User
+  alias Ticketsystem.Companies.Company
   alias Ticketsystem.Tickets.Ticket
 
   @doc """
@@ -49,10 +50,7 @@ defimpl Canada.Can, for: Ticketsystem.Accounts.User do
   """
   def can?(user, action, Ticket) when action in [:create, :update, :destroy] do
     cond do
-      :superadmin in user.roles ->
-        true
-
-      :issuer in user.roles ->
+      :superadmin in user.roles || :issuer in user.roles ->
         true
 
       true ->
@@ -66,6 +64,44 @@ defimpl Canada.Can, for: Ticketsystem.Accounts.User do
         true
 
       :issuer in user.roles && user.id == object.issuer_id ->
+        true
+
+      true ->
+        false
+    end
+  end
+
+  @doc """
+  Ability checks for actions on a company struct
+  """
+  def can?(user, action, Company) when action in [:create, :update, :destroy] do
+    if :superadmin in user.roles, do: true, else: false
+  end
+
+  def can?(user, action, %Company{}) when action in [:create, :update, :destroy] do
+    if :superadmin in user.roles, do: true, else: false
+  end
+
+  def can?(user, action, object = %Company{}) when action in [:update] do
+    cond do
+      :superadmin in user.roles ->
+        true
+
+      :admin in user.roles && user.company_id == object.id ->
+        true
+
+      true ->
+        false
+    end
+  end
+
+  def can?(user, action, object = %Company{}) when action in [:read] do
+    cond do
+      :superadmin in user.roles ->
+        true
+
+      user.company_id == object.id &&
+          (:admin in user.roles || :isser in user.roles || :handler in user.roles) ->
         true
 
       true ->
