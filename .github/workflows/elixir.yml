@@ -20,5 +20,6 @@ jobs:
         mix deps.get
     - name: Run Tests
       run: |
+        sudo apt-get install build-essential -y
         cd api
         mix test
