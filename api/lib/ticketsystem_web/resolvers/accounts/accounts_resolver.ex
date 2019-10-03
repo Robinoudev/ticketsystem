@@ -19,11 +19,11 @@ defmodule TicketsystemWeb.Resolvers.Accounts do
   end
 
   def insert_or_update_user(_parent, args, %{context: %{current_user: current_user}}) do
-    case Accounts.insert_or_update_user(args.user, current_user) do
-      {:error, %Ecto.Changeset{} = changeset} -> {:ok, changeset}
-      {:error, %ValidationMessage{} = message} -> {:ok, message}
-      {:ok, user} -> {:ok, user}
-    end
+      case Accounts.insert_or_update_user(args.user, current_user) do
+        {:error, %Ecto.Changeset{} = changeset} -> {:ok, changeset}
+        {:error, %ValidationMessage{} = message} -> {:ok, message}
+        {:ok, user} -> {:ok, user}
+      end
   end
 
   def insert_or_update_user(_parent, _args, _resolution) do

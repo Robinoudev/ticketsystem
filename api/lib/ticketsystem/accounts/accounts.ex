@@ -31,7 +31,7 @@ defmodule Ticketsystem.Accounts do
     user =
       case Map.fetch(attrs, :id) do
         {:ok, _value} -> Repo.get(User, attrs.id) |> Allow.authorize(:update, current_user)
-        :error -> %User{} |> Allow.authorize(:create, current_user)
+        :error -> %User{company_id: String.to_integer(attrs.company_id)} |> Allow.authorize(:create, current_user)
       end
 
     case user do

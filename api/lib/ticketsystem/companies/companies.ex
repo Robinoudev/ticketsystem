@@ -18,7 +18,7 @@ defmodule Ticketsystem.Companies do
   @doc """
   Gets the company from `attrs.id` if any and updates otherwise inserts new Company
   """
-  def insert_or_update_company(attrs \\ {}) do
+  def insert_or_update_company(attrs \\ %{}) do
     company =
       case Map.fetch(attrs, :id) do
         {:ok, _value} -> Repo.get(Company, attrs.id)

@@ -4,7 +4,7 @@ defimpl Canada.Can, for: Ticketsystem.Accounts.User do
   alias Ticketsystem.Tickets.Ticket
 
   @doc """
-  Ability checks for actions on a user struct
+  Ability checks for actions on a `%User{}`
   """
   def can?(user, action, User) when action in [:create, :update, :destroy] do
     cond do
@@ -46,7 +46,7 @@ defimpl Canada.Can, for: Ticketsystem.Accounts.User do
   end
 
   @doc """
-  Ability checks for actions on a Ticket struct
+  Ability checks for actions on a `%Ticket{}`
   """
   def can?(user, action, Ticket) when action in [:create, :update, :destroy] do
     if :superadmin in user.roles || :issuer in user.roles, do: true, else: false
@@ -66,7 +66,7 @@ defimpl Canada.Can, for: Ticketsystem.Accounts.User do
   end
 
   @doc """
-  Ability checks for actions on a company struct
+  Ability checks for actions on a `%Company{}`
   """
   def can?(user, action, Company) when action in [:create, :update, :destroy] do
     if :superadmin in user.roles, do: true, else: false
