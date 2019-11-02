@@ -6,17 +6,16 @@ defmodule Ticketsystem.AccountsTest do
   alias Ticketsystem.Accounts.User
 
   describe "users" do
-
     setup do
       %{
         company: insert(:company),
-        current_user: insert(:user_with_company, roles: ["superadmin"])
+        superadmin: insert(:user_with_company, roles: ["superadmin"])
       }
     end
 
-    test "list_users/0 returns all users", context do
+    test "list_users/1 returns all users", context do
       insert_list(3, :user, company: context.company)
-      users = Accounts.list_users()
+      users = Accounts.list_users(context.superadmin)
       assert length(users) == 4
     end
 
@@ -118,7 +117,7 @@ defmodule Ticketsystem.AccountsTest do
         company_id: "3"
       }
 
-      {:error, %AbsintheErrorPayload.ValidationMessage{} = message}= Accounts.insert_or_update_user(attrs, admin_user)
+      {:error, %AbsintheErrorPayload.ValidationMessage{} = message} = Accounts.insert_or_update_user(attrs, admin_user)
 
       assert message == %AbsintheErrorPayload.ValidationMessage{
         code: "denied",
@@ -141,7 +140,7 @@ defmodule Ticketsystem.AccountsTest do
         company_id: "#{ctx.company.id}"
       }
 
-      {:error, %AbsintheErrorPayload.ValidationMessage{} = message}= Accounts.insert_or_update_user(attrs, user)
+      {:error, %AbsintheErrorPayload.ValidationMessage{} = message} = Accounts.insert_or_update_user(attrs, user)
       assert message == %AbsintheErrorPayload.ValidationMessage{
         code: "denied",
         field: :authorization,
@@ -151,5 +150,8 @@ defmodule Ticketsystem.AccountsTest do
         template: "is invalid"
       }
     end
+  end
+
+  test "when user is a superadmin it can read users of different company", ctx do
   end
 end

@@ -5,8 +5,8 @@ defmodule TicketsystemWeb.Resolvers.Accounts do
   alias AbsintheErrorPayload.ValidationMessage
   alias Ticketsystem.{Accounts, AuthHelper, Guardian}
 
-  def list_users(_parent, _args, %{context: %{current_user: _user}}) do
-    {:ok, Accounts.list_users()}
+  def list_users(_parent, _args, %{context: %{current_user: user}}) do
+    {:ok, Accounts.list_users(user)}
   end
 
   def list_users(_parent, _args, _resolution) do
