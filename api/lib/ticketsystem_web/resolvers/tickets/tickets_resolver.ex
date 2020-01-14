@@ -5,8 +5,11 @@ defmodule TicketsystemWeb.Resolvers.Tickets do
   alias AbsintheErrorPayload.ValidationMessage
   alias Ticketsystem.Tickets
 
-  def list_tickets(_parent, _args, %{context: %{current_user: _user}}) do
-    {:ok, Tickets.list_tickets()}
+  def list_tickets(_parent, _args, %{context: %{current_user: user}}) do
+    case Tickets.list_tickets(user) do
+      {:error, %ValidationMessage{} = message} -> {:ok, message}
+      {:ok, tickets} -> {:ok, tickets}
+    end
   end
 
   def list_tickets(_parent, _args, _resolution) do

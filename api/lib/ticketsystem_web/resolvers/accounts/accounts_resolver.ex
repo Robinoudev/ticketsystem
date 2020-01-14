@@ -6,7 +6,10 @@ defmodule TicketsystemWeb.Resolvers.Accounts do
   alias Ticketsystem.{Accounts, AuthHelper, Guardian}
 
   def list_users(_parent, _args, %{context: %{current_user: user}}) do
-    {:ok, Accounts.list_users(user)}
+    case Accounts.list_users(user) do
+        {:error, %ValidationMessage{} = message} -> {:ok, message}
+        {:ok, users} -> {:ok, users}
+    end
   end
 
   def list_users(_parent, _args, _resolution) do

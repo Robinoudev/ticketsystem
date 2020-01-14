@@ -111,7 +111,7 @@ defmodule TicketsystemWeb.Resolvers.AccountsMutationTest do
           context: context_for(context.user)
         )
 
-      users = Accounts.list_users(context.user)
+      {:ok, users} = Accounts.list_users(context.user)
       new_user = List.last(users)
 
       assert result["result"] ==
@@ -151,7 +151,7 @@ defmodule TicketsystemWeb.Resolvers.AccountsMutationTest do
                }
              ]
 
-      users = Accounts.list_users(context.user)
+      {:ok, users} = Accounts.list_users(context.user)
       assert length(users) == 1
     end
 
@@ -181,7 +181,7 @@ defmodule TicketsystemWeb.Resolvers.AccountsMutationTest do
                }
              ]
 
-      users = Accounts.list_users(context.user)
+      {:ok, users} = Accounts.list_users(context.user)
       assert length(users) == 1
     end
   end

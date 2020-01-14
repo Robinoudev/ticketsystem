@@ -13,35 +13,42 @@ defmodule Ticketsystem.AccountsTest do
       }
     end
 
-    test "list_users/1 returns all users", context do
-      insert_list(3, :user, company: context.company)
-      users = Accounts.list_users(context.superadmin)
+    test "list_users/1 returns all users when user is superadmin", ctx do
+      insert_list(3, :user, company: ctx.company)
+      {:ok, users} = Accounts.list_users(ctx.superadmin)
       assert length(users) == 4
     end
 
-    test "get_user!/1 returns the user with given id", context do
-      user = insert(:user, company: context.company)
+    test "list_users/1 returns all users of company when user is admin", ctx do
+      admin = insert(:user, company: ctx.company, roles: ["admin"])
+      insert_list(3, :user, company: ctx.company)
+      {:ok, users} = Accounts.list_users(admin)
+      assert length(users) == 5
+    end
+
+    test "get_user!/1 returns the user with given id", ctx do
+      user = insert(:user, company: ctx.company)
       database_user = Accounts.get_user!(user.id)
       assert database_user.name == user.name
       assert database_user.username == user.username
       assert database_user.email == user.email
     end
 
-    test "when user is superadmin insert_or_update_user/2 with valid data creates a user", context do
+    test "when user is superadmin insert_or_update_user/2 with valid data creates a user", ctx do
       attrs = %{
         email: "valid@email.com",
         password: "password",
         name: "name",
         username: "valid_username",
-        company_id: "#{context.company.id}",
+        company_id: "#{ctx.company.id}",
         roles: [:admin]
       }
 
-      assert {:ok, %User{} = user} = Accounts.insert_or_update_user(attrs, context.current_user)
+      assert {:ok, %User{} = user} = Accounts.insert_or_update_user(attrs, ctx.superadmin)
       assert user.email == "valid@email.com"
       assert user.name == "name"
       assert user.username == "valid_username"
-      assert user.company_id == context.company.id
+      assert user.company_id == ctx.company.id
     end
 
     test "insert_or_update_user/2 with invalid data returns error changeset", ctx do
@@ -53,7 +60,7 @@ defmodule Ticketsystem.AccountsTest do
         company_id: "999"
       }
 
-      assert {:error, %Ecto.Changeset{} = changeset} = Accounts.insert_or_update_user(attrs, ctx.current_user)
+      assert {:error, %Ecto.Changeset{} = changeset} = Accounts.insert_or_update_user(attrs, ctx.superadmin)
       assert changeset.errors == [
         name: {"can't be blank", [validation: :required]},
         username: {"can't be blank", [validation: :required]},
@@ -150,8 +157,5 @@ defmodule Ticketsystem.AccountsTest do
         template: "is invalid"
       }
     end
-  end
-
-  test "when user is a superadmin it can read users of different company", ctx do
   end
 end

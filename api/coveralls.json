@@ -11,6 +11,7 @@
     "lib/ticketsystem_web/router.ex",
     "lib/ticketsystem_web.ex",
     "test/support/",
-    "lib/ticketsystem_web/views/error_helpers.ex"
+    "lib/ticketsystem_web/views/error_helpers.ex",
+    "lib/ticketsystem/ecto_enums.ex"
   ]
 }

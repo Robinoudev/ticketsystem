@@ -12,8 +12,11 @@ defmodule Ticketsystem.Tickets do
 
   alias Ticketsystem.Tickets.Ticket
 
-  def list_tickets do
-    Repo.all(Ticket)
+  def list_tickets(current_user) do
+    case Allow.authorize(Ticket, :read, current_user) do
+      {:error, %ValidationMessage{} = message} -> {:error, message}
+      Ticket -> {:ok, Repo.all(Ticket)}
+    end
   end
 
   def insert_or_update_ticket(attrs \\ %{}, current_user) do

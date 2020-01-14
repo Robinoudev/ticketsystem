@@ -6,17 +6,9 @@ defimpl Canada.Can, for: Ticketsystem.Accounts.User do
   @doc """
   Ability checks for actions on a `%User{}`
   """
-  def can?(user, action, User) when action in [:create, :update, :destroy] do
-    cond do
-      :superadmin in user.roles ->
-        true
 
-      :admin in user.roles ->
-        true
-
-      true ->
-        false
-    end
+  def can?(user, action, User) when action in [:read] do
+    if :superadmin in user.roles || :admin in user.roles, do: true, else: false
   end
 
   def can?(user, action, object = %User{}) when action in [:create, :update, :destroy] do
@@ -32,24 +24,11 @@ defimpl Canada.Can, for: Ticketsystem.Accounts.User do
     end
   end
 
-  def can?(user, action, object = %User{}) when action in [:read] do
-    cond do
-      :superadmin in user.roles ->
-        true
-
-      object.company_id == user.company_id ->
-        true
-
-      true ->
-        false
-    end
-  end
-
   @doc """
   Ability checks for actions on a `%Ticket{}`
   """
-  def can?(user, action, Ticket) when action in [:create, :update, :destroy] do
-    if :superadmin in user.roles || :issuer in user.roles, do: true, else: false
+  def can?(user, action, Ticket) when action in [:read] do
+    if :superadmin in user.roles || :issuer in user.roles || :handler in user.roles, do: true, else: false
   end
 
   def can?(user, action, object = %Ticket{}) when action in [:create, :update, :destroy] do
@@ -68,7 +47,7 @@ defimpl Canada.Can, for: Ticketsystem.Accounts.User do
   @doc """
   Ability checks for actions on a `%Company{}`
   """
-  def can?(user, action, Company) when action in [:create, :update, :destroy] do
+  def can?(user, action, Company) when action in [:read] do
     if :superadmin in user.roles, do: true, else: false
   end
 
@@ -104,6 +83,7 @@ defimpl Canada.Can, for: Ticketsystem.Accounts.User do
   end
 
   # Inform of unimplemented ability check
+  # coveralls-ignore-start
   def can?(subject, action, resource) do
     raise """
     Unimplemented authorization check for User!  To fix see below...
@@ -119,4 +99,5 @@ defimpl Canada.Can, for: Ticketsystem.Accounts.User do
     resource: #{inspect(resource)}
     """
   end
+  # coveralls-ignore-stop
 end

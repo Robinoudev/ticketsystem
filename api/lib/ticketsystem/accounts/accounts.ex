@@ -16,15 +16,9 @@ defmodule Ticketsystem.Accounts do
   Returns the list of users.
   """
   def list_users(current_user) do
-    if Allow.authorize(User, :read, current_user) do
-      Repo.all(User)
-    else
-      {:error,
-        %ValidationMessage{
-          field: :authorization,
-          code: "denied",
-          message: "not authorized to access this resource"
-        }}
+    case Allow.authorize(User, :read, current_user) do
+      {:error, %ValidationMessage{} = message} -> {:error, message}
+      User -> {:ok, Repo.all(User)}
     end
   end
 
