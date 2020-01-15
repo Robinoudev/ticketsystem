@@ -7,8 +7,8 @@ defmodule TicketsystemWeb.Resolvers.Accounts do
 
   def list_users(_parent, _args, %{context: %{current_user: user}}) do
     case Accounts.list_users(user) do
-        {:error, %ValidationMessage{} = message} -> {:ok, message}
-        {:ok, users} -> {:ok, users}
+      {:error, %ValidationMessage{} = message} -> {:ok, message}
+      {:ok, users} -> {:ok, users}
     end
   end
 

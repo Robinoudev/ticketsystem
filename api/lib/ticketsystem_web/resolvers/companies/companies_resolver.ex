@@ -5,8 +5,11 @@ defmodule TicketsystemWeb.Resolvers.Companies do
   alias AbsintheErrorPayload.ValidationMessage
   alias Ticketsystem.Companies
 
-  def list_companies(_parent, _args, %{context: %{current_user: _user}}) do
-    {:ok, Companies.list_companies()}
+  def list_companies(_parent, _args, %{context: %{current_user: user}}) do
+    case Companies.list_companies(user) do
+      {:error, %ValidationMessage{} = message} -> {:ok, message}
+      {:ok, companies} -> {:ok, companies}
+    end
   end
 
   def list_companies(_parent, _args, _resolution) do
