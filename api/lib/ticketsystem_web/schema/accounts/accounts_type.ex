@@ -14,6 +14,7 @@ defmodule TicketsystemWeb.Schema.AccountsType do
     field :name, :string
     field :username, :string
     field :email, :string
+    field :roles, list_of(:role)
     field :company, :company_type, resolve: dataloader(Data)
     field :issued_tickets, list_of(:ticket_type), resolve: dataloader(Data)
     field :handled_tickets, list_of(:ticket_type), resolve: dataloader(Data)

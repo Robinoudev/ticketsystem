@@ -5,8 +5,11 @@ defmodule TicketsystemWeb.Resolvers.Tickets do
   alias AbsintheErrorPayload.ValidationMessage
   alias Ticketsystem.Tickets
 
-  def list_tickets(_parent, _args, %{context: %{current_user: _user}}) do
-    {:ok, Tickets.list_tickets()}
+  def list_tickets(_parent, _args, %{context: %{current_user: user}}) do
+    case Tickets.list_tickets(user) do
+      {:error, %ValidationMessage{} = message} -> {:ok, message}
+      {:ok, tickets} -> {:ok, tickets}
+    end
   end
 
   def list_tickets(_parent, _args, _resolution) do
@@ -22,8 +25,8 @@ defmodule TicketsystemWeb.Resolvers.Tickets do
     result =
       case Tickets.insert_or_update_ticket(args.ticket, current_user) do
         {:error, %Ecto.Changeset{} = changeset} -> {:ok, changeset}
+        {:error, %ValidationMessage{} = message} -> {:ok, message}
         {:ok, ticket} -> {:ok, ticket}
-        nil -> {:ok, %ValidationMessage{field: :id, code: "not found", message: "does not exist"}}
       end
 
     result

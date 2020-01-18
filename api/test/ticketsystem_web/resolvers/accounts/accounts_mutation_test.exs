@@ -1,13 +1,16 @@
 defmodule TicketsystemWeb.Resolvers.AccountsMutationTest do
   use TicketsystemWeb.ConnCase, async: true
   use Plug.Test
+
+  import Ticketsystem.AbsintheHelpers
+
   alias Ticketsystem.Accounts
   alias TicketsystemWeb.Schema
 
   describe "Accounts resolver mutations" do
     setup do
       %{
-        user: insert(:user_with_company),
+        user: insert(:user_with_company, roles: ["superadmin"]),
         login_mutation: """
           mutation Login ($user: LoginParams) {
             loginMutation (user: $user) {
@@ -105,10 +108,10 @@ defmodule TicketsystemWeb.Resolvers.AccountsMutationTest do
               "companyId" => company.id
             }
           },
-          context: %{}
+          context: context_for(context.user)
         )
 
-      users = Accounts.list_users()
+      {:ok, users} = Accounts.list_users(context.user)
       new_user = List.last(users)
 
       assert result["result"] ==
@@ -129,7 +132,7 @@ defmodule TicketsystemWeb.Resolvers.AccountsMutationTest do
         Absinthe.run(
           context.create_user_mutation,
           Schema,
-          context: %{},
+          context: context_for(context.user),
           variables: %{
             "params" => %{
               "email" => "test@email.com",
@@ -148,7 +151,7 @@ defmodule TicketsystemWeb.Resolvers.AccountsMutationTest do
                }
              ]
 
-      users = Accounts.list_users()
+      {:ok, users} = Accounts.list_users(context.user)
       assert length(users) == 1
     end
 
@@ -159,7 +162,7 @@ defmodule TicketsystemWeb.Resolvers.AccountsMutationTest do
         Absinthe.run(
           context.create_user_mutation,
           Schema,
-          context: %{},
+          context: context_for(context.user),
           variables: %{
             "params" => %{
               "email" => context.user.email,
@@ -178,7 +181,7 @@ defmodule TicketsystemWeb.Resolvers.AccountsMutationTest do
                }
              ]
 
-      users = Accounts.list_users()
+      {:ok, users} = Accounts.list_users(context.user)
       assert length(users) == 1
     end
   end

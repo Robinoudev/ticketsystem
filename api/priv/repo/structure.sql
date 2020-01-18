@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 11.5 (Debian 11.5-1.pgdg90+1)
--- Dumped by pg_dump version 11.5
+-- Dumped from database version 12.1 (Debian 12.1-1.pgdg100+1)
+-- Dumped by pg_dump version 12.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -18,7 +18,7 @@ SET row_security = off;
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_table_access_method = heap;
 
 --
 -- Name: companies; Type: TABLE; Schema: public; Owner: -
@@ -110,7 +110,8 @@ CREATE TABLE public.users (
     inserted_at timestamp(0) without time zone NOT NULL,
     updated_at timestamp(0) without time zone NOT NULL,
     password_hash character varying(255) NOT NULL,
-    company_id bigint NOT NULL
+    company_id bigint NOT NULL,
+    roles integer[] DEFAULT ARRAY[3]
 );
 
 
@@ -235,5 +236,5 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO public."schema_migrations" (version) VALUES (20190705141012), (20190706131407), (20190706133556), (20190706134339), (20190815190807), (20190819111957), (20190820090950), (20190830172345), (20190830172538), (20190831075055), (20190831084357), (20190831144954);
+INSERT INTO public."schema_migrations" (version) VALUES (20190705141012), (20190706131407), (20190706133556), (20190706134339), (20190815190807), (20190819111957), (20190820090950), (20190830172345), (20190830172538), (20190831075055), (20190831084357), (20190831144954), (20190910154041);
 

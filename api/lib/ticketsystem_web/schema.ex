@@ -7,6 +7,7 @@ defmodule TicketsystemWeb.Schema do
   alias TicketsystemWeb.Data
 
   import_types(AbsintheErrorPayload.ValidationMessageTypes)
+  import_types(TicketsystemWeb.Schema.Enums)
 
   import_types(TicketsystemWeb.Schema.AccountsType)
   import_types(TicketsystemWeb.Schema.AccountsInput)

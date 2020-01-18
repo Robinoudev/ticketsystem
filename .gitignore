@@ -30,3 +30,5 @@
 /api/.elixir_ls/
 /api/tmp/
 /tmp/
+
+.vscode/

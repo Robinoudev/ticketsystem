@@ -10,10 +10,8 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-alias Ticketsystem.Accounts
 alias Ticketsystem.Accounts.User
 alias Ticketsystem.Companies.Company
-alias Ticketsystem.Companies
 alias Ticketsystem.Repo
 alias Ticketsystem.Tickets
 alias Ticketsystem.Tickets.Ticket
@@ -24,26 +22,58 @@ User |> Repo.delete_all()
 Company |> Repo.delete_all()
 
 # Companies
-{:ok, company1} = Companies.insert_or_update_company(%{name: "company1"})
-{:ok, company2} = Companies.insert_or_update_company(%{name: "company2"})
+company1 = Repo.insert!(%Company{name: "company1"})
+company2 = Repo.insert!(%Company{name: "company2"})
 
 # Users
-{:ok, user1} =
-  Accounts.create_user(%{
-    email: "email1@email.com",
-    name: "name1",
-    username: "username1",
-    password: "password",
-    company_id: company1.id
+superadmin =
+  Repo.insert!(%User{
+    email: "superadmin@email.com",
+    name: "superadmin",
+    username: "superadmin",
+    password_hash: Bcrypt.hash_pwd_salt("password"),
+    company_id: company1.id,
+    roles: [:superadmin]
   })
 
-{:ok, user2} =
-  Accounts.create_user(%{
-    email: "email2@email.com",
-    name: "name2",
-    username: "username2",
-    password: "password",
-    company_id: company2.id
+admin =
+  Repo.insert!(%User{
+    email: "admin@email.com",
+    name: "admin",
+    username: "admin",
+    password_hash: Bcrypt.hash_pwd_salt("password"),
+    company_id: company2.id,
+    roles: [:admin]
+  })
+
+handler =
+  Repo.insert!(%User{
+    email: "handler@email.com",
+    name: "handler",
+    username: "handler",
+    password_hash: Bcrypt.hash_pwd_salt("password"),
+    company_id: company2.id,
+    roles: [:handler]
+  })
+
+issuer1 =
+  Repo.insert!(%User{
+    email: "issuer@email.com",
+    name: "issuer",
+    username: "issuer",
+    password_hash: Bcrypt.hash_pwd_salt("password"),
+    company_id: company2.id,
+    roles: [:issuer]
+  })
+
+issuer2 =
+  Repo.insert!(%User{
+    email: "issuer2@email.com",
+    name: "issuer2",
+    username: "issuer2",
+    password_hash: Bcrypt.hash_pwd_salt("password"),
+    company_id: company1.id,
+    roles: [:issuer]
   })
 
 # Issued Tickets
@@ -52,7 +82,7 @@ Tickets.insert_or_update_ticket(
     title: "First ticket",
     description: "Description"
   },
-  user1
+  issuer1
 )
 
 Tickets.insert_or_update_ticket(
@@ -60,5 +90,5 @@ Tickets.insert_or_update_ticket(
     title: "Second ticket",
     description: "Description"
   },
-  user2
+  issuer2
 )

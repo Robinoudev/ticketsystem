@@ -68,7 +68,9 @@ defmodule Ticketsystem.MixProject do
       {:faker, "~> 0.12", only: :test},
       {:dataloader, "~> 1.0.0"},
       {:mix_test_watch, "~> 1.0.1", only: :dev, runtime: false},
-      {:credo, "~> 1.1.0", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.1.0", only: [:dev, :test], runtime: false},
+      {:canada, "~> 2.0"},
+      {:ecto_enum, "~> 1.3"}
     ]
   end
 

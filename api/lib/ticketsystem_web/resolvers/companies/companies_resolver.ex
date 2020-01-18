@@ -5,8 +5,11 @@ defmodule TicketsystemWeb.Resolvers.Companies do
   alias AbsintheErrorPayload.ValidationMessage
   alias Ticketsystem.Companies
 
-  def list_companies(_parent, _args, %{context: %{current_user: _user}}) do
-    {:ok, Companies.list_companies()}
+  def list_companies(_parent, _args, %{context: %{current_user: user}}) do
+    case Companies.list_companies(user) do
+      {:error, %ValidationMessage{} = message} -> {:ok, message}
+      {:ok, companies} -> {:ok, companies}
+    end
   end
 
   def list_companies(_parent, _args, _resolution) do
@@ -18,12 +21,12 @@ defmodule TicketsystemWeb.Resolvers.Companies do
      }}
   end
 
-  def mutate_company(_parent, args, %{context: %{current_user: _user}}) do
+  def mutate_company(_parent, args, %{context: %{current_user: current_user}}) do
     result =
-      case Companies.insert_or_update_company(args.company) do
+      case Companies.insert_or_update_company(args.company, current_user) do
         {:error, %Ecto.Changeset{} = changeset} -> {:ok, changeset}
+        {:error, %ValidationMessage{} = message} -> {:ok, message}
         {:ok, company} -> {:ok, company}
-        nil -> {:ok, %ValidationMessage{field: :id, code: "not found", message: "does not exist"}}
       end
 
     result
