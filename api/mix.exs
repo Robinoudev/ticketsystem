@@ -61,7 +61,7 @@ defmodule Ticketsystem.MixProject do
       {:excoveralls, "~> 0.11", only: :test},
       {:ex_machina, "~> 2.3", only: :test},
       {:guardian, "~> 2.0.0"},
-      {:comeonin, "~> 5.1.2"},
+      {:comeonin, "~> 5.2.0"},
       {:bcrypt_elixir, "~> 2.0.3"},
       {:ex_doc, "~> 0.19", only: :dev, runtime: false},
       {:absinthe_error_payload, "~> 1.0"},
