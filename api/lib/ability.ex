@@ -51,10 +51,12 @@ defimpl Canada.Can, for: Ticketsystem.Accounts.User do
     if :superadmin in user.roles, do: true, else: false
   end
 
-  def can?(user, action, %Company{}) when action in [:create, :update, :destroy] do
+  # Only a superadmin can destroy and create companies
+  def can?(user, action, %Company{}) when action in [:create, :destroy] do
     if :superadmin in user.roles, do: true, else: false
   end
 
+  # An admin of a company can update its own company
   def can?(user, action, object = %Company{}) when action in [:update] do
     cond do
       :superadmin in user.roles ->

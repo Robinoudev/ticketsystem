@@ -29,7 +29,7 @@ defmodule Ticketsystem.Companies do
     company =
       case Map.fetch(attrs, :id) do
         {:ok, _value} -> Repo.get(Company, attrs.id) |> Allow.authorize(:update, current_user)
-        :error -> %Company{}
+        :error -> %Company{} |> Allow.authorize(:create, current_user)
       end
 
     case company do

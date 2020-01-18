@@ -12,6 +12,9 @@ defmodule Ticketsystem.Tickets do
 
   alias Ticketsystem.Tickets.Ticket
 
+  @doc """
+  Returns list of all tickets
+  """
   def list_tickets(current_user) do
     case Allow.authorize(Ticket, :read, current_user) do
       {:error, %ValidationMessage{} = message} -> {:error, message}
@@ -19,6 +22,9 @@ defmodule Ticketsystem.Tickets do
     end
   end
 
+  @doc """
+  Gets the ticket from `attrs.id` if any and updates otherwise inserts new Ticket
+  """
   def insert_or_update_ticket(attrs \\ %{}, current_user) do
     ticket =
       case Map.fetch(attrs, :id) do

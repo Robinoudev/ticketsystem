@@ -4,23 +4,26 @@ defmodule TicketsystemWeb.Resolvers.CompaniesMutationTest do
   import Ticketsystem.AbsintheHelpers
   alias Ticketsystem.Companies
 
-  describe "Companies resolver mutations" do
+  @company_mutation """
+  mutation CompanyMutation ($company: CompanyMutationParams!) {
+    companyMutation (company: $company) {
+      messages {
+        field
+        message
+      }
+      result {
+        name
+      }
+    }
+  }
+  """
+
+  describe "Companies resolver superadmin mutations" do
+    @describetag :superadmin
+
     setup do
       %{
-        user: insert(:user_with_company),
-        company_mutation: """
-        mutation CompanyMutation ($company: CompanyMutationParams!) {
-          companyMutation (company: $company) {
-            messages {
-              field
-              message
-            }
-            result {
-              name
-            }
-          }
-        }
-        """
+        user: insert(:user_with_company, roles: [:superadmin]),
       }
     end
 
@@ -33,15 +36,17 @@ defmodule TicketsystemWeb.Resolvers.CompaniesMutationTest do
 
       {:ok, %{data: %{"companyMutation" => result}}} =
         Absinthe.run(
-          ctx.company_mutation,
+          @company_mutation,
           Schema,
           context: context_for(ctx.user),
           variables: variables
         )
 
-      new_company = Enum.at(Companies.list_companies(), -1)
+      {:ok ,companies = companies} = Companies.list_companies(ctx.user)
+      new_company = companies |> Enum.at(-1)
 
       assert result["result"]["name"] == new_company.name
+      assert length(companies) == 2
     end
 
     test "should validate the uniqueness of name", ctx do
@@ -55,13 +60,13 @@ defmodule TicketsystemWeb.Resolvers.CompaniesMutationTest do
 
       {:ok, %{data: %{"companyMutation" => result}}} =
         Absinthe.run(
-          ctx.company_mutation,
+          @company_mutation,
           Schema,
           context: context_for(ctx.user),
           variables: variables
         )
 
-      companies = Companies.list_companies()
+      {:ok, companies = companies} = Companies.list_companies(ctx.user)
 
       assert result["messages"] == [%{"field" => "name", "message" => "has already been taken"}]
       assert length(companies) == 2
@@ -80,13 +85,13 @@ defmodule TicketsystemWeb.Resolvers.CompaniesMutationTest do
 
       {:ok, %{data: %{"companyMutation" => result}}} =
         Absinthe.run(
-          ctx.company_mutation,
+          @company_mutation,
           Schema,
           context: context_for(ctx.user),
           variables: variables
         )
 
-      companies = Companies.list_companies()
+      {:ok, companies = companies} = Companies.list_companies(ctx.user)
 
       assert result["result"]["name"] == "updated name"
       assert length(companies) == 2
@@ -105,13 +110,13 @@ defmodule TicketsystemWeb.Resolvers.CompaniesMutationTest do
 
       {:ok, %{data: %{"companyMutation" => result}}} =
         Absinthe.run(
-          ctx.company_mutation,
+          @company_mutation,
           Schema,
           context: context_for(ctx.user),
           variables: variables
         )
 
-      companies = Companies.list_companies()
+      {:ok, companies = companies} = Companies.list_companies(ctx.user)
 
       assert result["messages"] == [%{"field" => "name", "message" => "has already been taken"}]
       assert length(companies) == 2
@@ -128,16 +133,54 @@ defmodule TicketsystemWeb.Resolvers.CompaniesMutationTest do
 
       {:ok, %{data: %{"companyMutation" => result}}} =
         Absinthe.run(
-          ctx.company_mutation,
+          @company_mutation,
           Schema,
           context: context_for(ctx.user),
           variables: variables
         )
 
-      companies = Companies.list_companies()
+      {:ok, companies = companies} = Companies.list_companies(ctx.user)
 
-      assert result["messages"] == [%{"field" => "id", "message" => "does not exist"}]
+      assert result["messages"] == [%{"field" => "id", "message" => "resource not found"}]
       assert length(companies) == 1
+    end
+  end
+
+  describe "Companies resolver admin mutations" do
+    @describetag :admin
+
+    setup do
+      %{
+        user: insert(:user_with_company, roles: [:admin]),
+      }
+    end
+
+    test "cannot create a company", ctx do
+    end
+
+    test "can update its own company", ctx do
+      variables = %{
+        "company" => %{
+          "id" => "#{ctx.user.company_id}",
+          "name" => "Name"
+        }
+      }
+
+      {:ok, %{data: %{"companyMutation" => result}}} =
+        Absinthe.run(
+          @company_mutation,
+          Schema,
+          context: context_for(ctx.user),
+          variables: variables
+        )
+
+      # {:ok, companies = companies} = Companies.list_companies(ctx.user)
+      require IEx; IEx.pry()
+      # companies = Ticketsystem.Repo.all(Company)
+    end
+
+    test "cannot update an other company", ctx do
+
     end
   end
 end

@@ -3,37 +3,38 @@ defmodule TicketsystemWeb.Resolvers.CompaniesQueryTest do
   use Plug.Test
   import Ticketsystem.AbsintheHelpers
 
-  describe "Companies resolver queries" do
+  @companies_query """
+    query Companies {
+      companiesQuery {
+        messages {
+          field
+          message
+        }
+        result {
+          id
+          name
+          users {
+            id
+            email
+            name
+          }
+        }
+      }
+    }
+  """
+
+  describe "CompaniesResolver queries as superadmin" do
     setup do
       %{
-        user: insert(:user_with_company),
+        user: insert(:user_with_company, roles: [:superadmin]),
         company: insert(:company),
-        companies_query: """
-          query Companies {
-            companiesQuery {
-              messages {
-                field
-                message
-              }
-              result {
-                id
-                name
-                users {
-                  id
-                  email
-                  name
-                }
-              }
-            }
-          }
-        """
       }
     end
 
     test "Returns unauthorized when not logged in", ctx do
       {:ok, %{data: %{"companiesQuery" => result}}} =
         Absinthe.run(
-          ctx.companies_query,
+          @companies_query,
           Schema
         )
 
@@ -48,7 +49,7 @@ defmodule TicketsystemWeb.Resolvers.CompaniesQueryTest do
     test "Returns companies when a valid context is provided", ctx do
       {:ok, %{data: %{"companiesQuery" => result}}} =
         Absinthe.run(
-          ctx.companies_query,
+          @companies_query,
           Schema,
           context: context_for(ctx.user)
         )

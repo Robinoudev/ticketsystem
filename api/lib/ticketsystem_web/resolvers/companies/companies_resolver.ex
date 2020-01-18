@@ -25,8 +25,8 @@ defmodule TicketsystemWeb.Resolvers.Companies do
     result =
       case Companies.insert_or_update_company(args.company, current_user) do
         {:error, %Ecto.Changeset{} = changeset} -> {:ok, changeset}
+        {:error, %ValidationMessage{} = message} -> {:ok, message}
         {:ok, company} -> {:ok, company}
-        nil -> {:ok, %ValidationMessage{field: :id, code: "not found", message: "does not exist"}}
       end
 
     result
