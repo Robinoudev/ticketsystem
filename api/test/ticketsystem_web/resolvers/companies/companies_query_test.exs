@@ -24,14 +24,16 @@ defmodule TicketsystemWeb.Resolvers.CompaniesQueryTest do
   """
 
   describe "CompaniesResolver queries as superadmin" do
+    @describetag :superadmir
+
     setup do
       %{
         user: insert(:user_with_company, roles: [:superadmin]),
-        company: insert(:company),
+        company: insert(:company)
       }
     end
 
-    test "Returns unauthorized when not logged in", ctx do
+    test "Returns unauthorized when not logged in" do
       {:ok, %{data: %{"companiesQuery" => result}}} =
         Absinthe.run(
           @companies_query,

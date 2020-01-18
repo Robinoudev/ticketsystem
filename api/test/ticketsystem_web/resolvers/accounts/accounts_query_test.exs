@@ -73,11 +73,11 @@ defmodule TicketsystemWeb.Resolvers.AccountsQueryTest do
         )
 
       assert result["messages"] == [
-          %{
-            "field" => "authorization",
-            "message" => "not authorized to access this resource"
-          }
-        ]
+               %{
+                 "field" => "authorization",
+                 "message" => "not authorized to access this resource"
+               }
+             ]
     end
   end
 end

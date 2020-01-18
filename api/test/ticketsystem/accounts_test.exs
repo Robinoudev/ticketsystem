@@ -60,13 +60,15 @@ defmodule Ticketsystem.AccountsTest do
         company_id: "999"
       }
 
-      assert {:error, %Ecto.Changeset{} = changeset} = Accounts.insert_or_update_user(attrs, ctx.superadmin)
+      assert {:error, %Ecto.Changeset{} = changeset} =
+               Accounts.insert_or_update_user(attrs, ctx.superadmin)
+
       assert changeset.errors == [
-        name: {"can't be blank", [validation: :required]},
-        username: {"can't be blank", [validation: :required]},
-        email: {"can't be blank", [validation: :required]},
-        password: {"can't be blank", [validation: :required]}
-      ]
+               name: {"can't be blank", [validation: :required]},
+               username: {"can't be blank", [validation: :required]},
+               email: {"can't be blank", [validation: :required]},
+               password: {"can't be blank", [validation: :required]}
+             ]
     end
 
     test "when user is an admin it can add users to its own company", ctx do
@@ -124,16 +126,17 @@ defmodule Ticketsystem.AccountsTest do
         company_id: "3"
       }
 
-      {:error, %AbsintheErrorPayload.ValidationMessage{} = message} = Accounts.insert_or_update_user(attrs, admin_user)
+      {:error, %AbsintheErrorPayload.ValidationMessage{} = message} =
+        Accounts.insert_or_update_user(attrs, admin_user)
 
       assert message == %AbsintheErrorPayload.ValidationMessage{
-        code: "denied",
-        field: :authorization,
-        key: nil,
-        message: "not authorized to access this resource",
-        options: [],
-        template: "is invalid"
-      }
+               code: "denied",
+               field: :authorization,
+               key: nil,
+               message: "not authorized to access this resource",
+               options: [],
+               template: "is invalid"
+             }
     end
 
     test "when user is a handler or regular user it cannot insert or update users", ctx do
@@ -147,15 +150,17 @@ defmodule Ticketsystem.AccountsTest do
         company_id: "#{ctx.company.id}"
       }
 
-      {:error, %AbsintheErrorPayload.ValidationMessage{} = message} = Accounts.insert_or_update_user(attrs, user)
+      {:error, %AbsintheErrorPayload.ValidationMessage{} = message} =
+        Accounts.insert_or_update_user(attrs, user)
+
       assert message == %AbsintheErrorPayload.ValidationMessage{
-        code: "denied",
-        field: :authorization,
-        key: nil,
-        message: "not authorized to access this resource",
-        options: [],
-        template: "is invalid"
-      }
+               code: "denied",
+               field: :authorization,
+               key: nil,
+               message: "not authorized to access this resource",
+               options: [],
+               template: "is invalid"
+             }
     end
   end
 end

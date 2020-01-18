@@ -28,7 +28,9 @@ defimpl Canada.Can, for: Ticketsystem.Accounts.User do
   Ability checks for actions on a `%Ticket{}`
   """
   def can?(user, action, Ticket) when action in [:read] do
-    if :superadmin in user.roles || :issuer in user.roles || :handler in user.roles, do: true, else: false
+    if :superadmin in user.roles || :issuer in user.roles || :handler in user.roles,
+      do: true,
+      else: false
   end
 
   def can?(user, action, object = %Ticket{}) when action in [:create, :update, :destroy] do
@@ -70,19 +72,21 @@ defimpl Canada.Can, for: Ticketsystem.Accounts.User do
     end
   end
 
-  def can?(user, action, object = %Company{}) when action in [:read] do
-    cond do
-      :superadmin in user.roles ->
-        true
+  # NOTE: Commented out because this code is not yet used. But will be needed later on
 
-      user.company_id == object.id &&
-          (:admin in user.roles || :isser in user.roles || :handler in user.roles) ->
-        true
+  # def can?(user, action, object = %Company{}) when action in [:read] do
+  #   cond do
+  #     :superadmin in user.roles ->
+  #       true
 
-      true ->
-        false
-    end
-  end
+  #     user.company_id == object.id &&
+  #         (:admin in user.roles || :isser in user.roles || :handler in user.roles) ->
+  #       true
+
+  #     true ->
+  #       false
+  #   end
+  # end
 
   # Inform of unimplemented ability check
   # coveralls-ignore-start
@@ -101,5 +105,6 @@ defimpl Canada.Can, for: Ticketsystem.Accounts.User do
     resource: #{inspect(resource)}
     """
   end
+
   # coveralls-ignore-stop
 end

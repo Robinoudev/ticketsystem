@@ -3,6 +3,8 @@ defmodule TicketsystemWeb.Resolvers.CompaniesMutationTest do
   use Plug.Test
   import Ticketsystem.AbsintheHelpers
   alias Ticketsystem.Companies
+  alias Ticketsystem.Companies.Company
+  alias Ticketsystem.Repo
 
   @company_mutation """
   mutation CompanyMutation ($company: CompanyMutationParams!) {
@@ -23,7 +25,7 @@ defmodule TicketsystemWeb.Resolvers.CompaniesMutationTest do
 
     setup do
       %{
-        user: insert(:user_with_company, roles: [:superadmin]),
+        user: insert(:user_with_company, roles: [:superadmin])
       }
     end
 
@@ -42,7 +44,7 @@ defmodule TicketsystemWeb.Resolvers.CompaniesMutationTest do
           variables: variables
         )
 
-      {:ok ,companies = companies} = Companies.list_companies(ctx.user)
+      {:ok, companies = companies} = Companies.list_companies(ctx.user)
       new_company = companies |> Enum.at(-1)
 
       assert result["result"]["name"] == new_company.name
@@ -151,18 +153,14 @@ defmodule TicketsystemWeb.Resolvers.CompaniesMutationTest do
 
     setup do
       %{
-        user: insert(:user_with_company, roles: [:admin]),
+        user: insert(:user_with_company, roles: [:admin])
       }
     end
 
     test "cannot create a company", ctx do
-    end
-
-    test "can update its own company", ctx do
       variables = %{
         "company" => %{
-          "id" => "#{ctx.user.company_id}",
-          "name" => "Name"
+          "name" => "New company"
         }
       }
 
@@ -174,13 +172,66 @@ defmodule TicketsystemWeb.Resolvers.CompaniesMutationTest do
           variables: variables
         )
 
-      # {:ok, companies = companies} = Companies.list_companies(ctx.user)
-      require IEx; IEx.pry()
-      # companies = Ticketsystem.Repo.all(Company)
+      assert result["messages"] == [
+               %{
+                 "field" => "authorization",
+                 "message" => "not authorized to access this resource"
+               }
+             ]
+
+      assert length(Repo.all(Company)) == 1
+    end
+
+    test "can update its own company", ctx do
+      variables = %{
+        "company" => %{
+          "id" => "#{ctx.user.company_id}",
+          "name" => "Changed"
+        }
+      }
+
+      {:ok, %{data: %{"companyMutation" => result}}} =
+        Absinthe.run(
+          @company_mutation,
+          Schema,
+          context: context_for(ctx.user),
+          variables: variables
+        )
+
+      companies = Repo.all(Company)
+
+      assert result["result"]["name"] == "Changed"
+      assert List.last(companies).name == "Changed"
+      assert length(companies) == 1
     end
 
     test "cannot update an other company", ctx do
+      decoy_company = insert(:company)
 
+      variables = %{
+        "company" => %{
+          "id" => "#{decoy_company.id}",
+          "name" => "Changed"
+        }
+      }
+
+      {:ok, %{data: %{"companyMutation" => result}}} =
+        Absinthe.run(
+          @company_mutation,
+          Schema,
+          context: context_for(ctx.user),
+          variables: variables
+        )
+
+      assert result["messages"] == [
+               %{
+                 "field" => "authorization",
+                 "message" => "not authorized to access this resource"
+               }
+             ]
+
+      assert length(Repo.all(Company)) == 2
+      assert List.last(Repo.all(Company)).name == decoy_company.name
     end
   end
 end

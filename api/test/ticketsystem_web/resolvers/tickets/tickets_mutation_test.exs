@@ -135,5 +135,31 @@ defmodule TicketsystemWeb.Resolvers.TicketsMutationTest do
                }
              ]
     end
+
+    test "returns unauthorized when not issuer or superadmin" do
+      invalid_user = insert(:user_with_company, roles: [:admin])
+
+      variables = %{
+        "ticket" => %{
+          "title" => "valid title",
+          "description" => "valid description"
+        }
+      }
+
+      {:ok, %{data: %{"ticketMutation" => result}}} =
+        Absinthe.run(
+          @ticket_mutation,
+          Schema,
+          context: context_for(invalid_user),
+          variables: variables
+        )
+
+      assert result["messages"] == [
+               %{
+                 "field" => "authorization",
+                 "message" => "not authorized to access this resource"
+               }
+             ]
+    end
   end
 end
