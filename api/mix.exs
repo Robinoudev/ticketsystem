@@ -62,7 +62,7 @@ defmodule Ticketsystem.MixProject do
       {:ex_machina, "~> 2.3", only: :test},
       {:guardian, "~> 2.0.0"},
       {:comeonin, "~> 5.2.0"},
-      {:bcrypt_elixir, "~> 2.0.3"},
+      {:bcrypt_elixir, "~> 2.1.0"},
       {:ex_doc, "~> 0.19", only: :dev, runtime: false},
       {:absinthe_error_payload, "~> 1.0"},
       {:faker, "~> 0.12", only: :test},
