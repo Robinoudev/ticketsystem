@@ -60,7 +60,7 @@ defmodule Ticketsystem.MixProject do
       {:absinthe_plug, "~> 1.4.7"},
       {:excoveralls, "~> 0.11", only: :test},
       {:ex_machina, "~> 2.3", only: :test},
-      {:guardian, "~> 2.0.0"},
+      {:guardian, "~> 2.1.1"},
       {:comeonin, "~> 5.2.0"},
       {:bcrypt_elixir, "~> 2.1.0"},
       {:ex_doc, "~> 0.19", only: :dev, runtime: false},
