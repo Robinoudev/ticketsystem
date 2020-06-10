@@ -16,10 +16,9 @@ matrix:
         - sudo apt-get update
         - sudo apt-get --yes remove postgresql\*
         - sudo apt-get install -y postgresql postgresql-client
-        - cd api
-      before_script:
         - sudo systemctl start postgresql.service
         - cd api
+      before_script:
         - psql --version
         - psql -c 'CREATE DATABASE travis_test_db' -U postgres
         - psql -c 'CREATE ROLE travis SUPERUSER LOGIN CREATEDB;' -U postgres
