@@ -20,7 +20,6 @@ matrix:
       before_script:
         - psql --version
         - psql -c 'CREATE DATABASE travis_test_db' -U postgres
-        - psql -c 'CREATE ROLE travis SUPERUSER LOGIN CREATEDB;' -U postgres
         - cp config/test.travis.exs config/test.exs
       script:
         - mix ecto.reset
