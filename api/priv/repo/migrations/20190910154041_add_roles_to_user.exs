@@ -3,7 +3,7 @@ defmodule Ticketsystem.Repo.Migrations.AddRolesToUser do
 
   def change do
     alter table("users") do
-      add_if_not_exists(:roles, {:array, :integer}, default: [3])
+      add(:roles, {:array, :integer}, default: [3])
     end
   end
 end

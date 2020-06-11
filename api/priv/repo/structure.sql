@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 12.3
+-- Dumped from database version 10.12 (Debian 10.12-2.pgdg90+1)
 -- Dumped by pg_dump version 12.3
 
 SET statement_timeout = 0;
@@ -17,8 +17,6 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 SET default_tablespace = '';
-
-SET default_table_access_method = heap;
 
 --
 -- Name: companies; Type: TABLE; Schema: public; Owner: -
