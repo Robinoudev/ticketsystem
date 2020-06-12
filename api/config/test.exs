@@ -3,9 +3,9 @@ use Mix.Config
 # Configure your database
 config :ticketsystem, Ticketsystem.Repo,
   username: "postgres",
-  password: "postgres",
+  password: "",
   database: "ticketsystem_test",
-  hostname: "db",
+  hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox,
   ownership_timeout: 900_000,
   timeout: 900_000
