@@ -4,6 +4,6 @@ RUN apk --no-cache --update add postgresql-client
 
 WORKDIR /app/user
 
-COPY . .
+COPY mix.exs mix.lock ./
 
 RUN mix do deps.get, deps.compile
