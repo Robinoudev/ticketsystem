@@ -13,13 +13,14 @@ services:
     volumes:
       - ./api:/app/user
 
-
   db:
-    image: postgres
+    image: postgres:12.4
     ports:
       - 5432:5432
     volumes:
       - dbdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
 
   e2e_api:
     build:
