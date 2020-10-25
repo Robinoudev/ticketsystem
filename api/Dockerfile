@@ -2,6 +2,7 @@ FROM bitwalker/alpine-elixir-phoenix:latest
 
 # For pg_dump
 RUN apk --no-cache --update add postgresql-client
+RUN apk upgrade
 
 WORKDIR /app/user
 
